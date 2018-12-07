@@ -1,6 +1,6 @@
 {
     "name": "mkorkmaz/redislabs-rejson",
-    "description": "PHP Client for Redislabs ReJSON Modules.",
+    "description": "PHP Client for Redislabs ReJSON Module.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -26,7 +26,7 @@
     },
     "suggest": {
         "predis/predis": "If your application depends on predis.",
-        "ext-redis": "If your application depens of redis extention."
+        "ext-redis": "If your application depends of redis extention."
     },
     "autoload": {
         "psr-4": {

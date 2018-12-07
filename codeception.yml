@@ -1,0 +1,21 @@
+namespace: RedislabsModulesTest
+suites:
+    unit:
+        path: .
+        actor: UnitTester
+        modules:
+            enabled:
+                # add more modules here
+                - Asserts
+settings:
+    shuffle: true
+    lint: true
+paths:
+    tests: tests
+    output: tests/_output
+    support: tests/_support
+    data: tests
+coverage:
+    enabled: true
+    include:
+    - src/*

@@ -1,8 +1,12 @@
 language: php
 sudo: false
+services:
+  - docker
 php:
   - 7.2
+before_install: echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 before_script:
+  - docker run -d -p 6379:6379 --name redis-rejson redislabs/rejson:latest
   - composer install -n
 script:
   - vendor/bin/codecept run unit --coverage --coverage-xml

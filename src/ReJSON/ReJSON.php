@@ -162,7 +162,7 @@ class ReJSON implements ModuleInterface
     }
 
 
-    public function resp($key, $paths = null)
+    public function resp(string $key, ?string $paths = '.')
     {
         return $this->runCommand(
             Resp::createCommandWithArguments($key, $paths)

@@ -258,7 +258,7 @@ class ReJSONTest extends \Codeception\Test\Unit
          * @var ReJSON $jsonModule
          */
         $this->reJsonModule->set('test', '.', ['foo' => 'bar', 'baz' => 'quz']);
-        $resp = $this->reJsonModule->resp('test', '.');
+        $resp = $this->reJsonModule->resp('test');
         $this->assertEquals(['foo', 'bar'], $resp[1]);
         $this->assertEquals(['baz', 'quz'], $resp[2]);
         $this->assertCount(3, $resp);

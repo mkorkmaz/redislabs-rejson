@@ -96,9 +96,10 @@ $reJSON = ReJSON::createWithPredis($redisClient);
 ```php
 <?php
 
-$reJSON->set('test', '.', ['foo'=>'bar'], 'XX');
+$reJSON->set('test', '.', ['foo'=>'bar'], 'NX');
 $reJSON->set('test', '.baz', 'qux');
-$baz = $this->reJsonModule->get('test', '.baz');
+$reJSON->set('test', '.baz', 'quux', 'XX');
+$baz = $reJSON->get('test', '.baz');
 
 var_dump($baz); 
 // Prints string(4) "quux"

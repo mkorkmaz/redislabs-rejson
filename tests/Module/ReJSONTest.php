@@ -1,4 +1,7 @@
-<?php namespace RedislabsModulesTest\Module;
+<?php
+declare(strict_types=1);
+
+namespace RedislabsModulesTest\Module;
 
 use Predis;
 use Redislabs\Module\ReJSON\ReJSON;

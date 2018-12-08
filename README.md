@@ -41,7 +41,7 @@ interface ReJSON
     public function objkeys(string $key, ?string $path = '.');
     public function objlen(string $key, ?string $path = '.');
     public function debug(string $subcommand, ?string $key = null, ?string $path = '.');
-    public function resp($key, $paths = null);
+    public function resp(string $key, ?string $paths = '.');
 }
 
 ```
@@ -88,8 +88,8 @@ $reJSON = ReJSON::createWithPredis($redisClient);
 ```
 
 ### Running commands
-
-- **$json** parameters can be any type of json encodable data (array, int, string, stdClass, any JsonSerializable object etc...). 
+- **$key (or $keys - array that containes $key items)** parameters are all string.
+- **$json (or $jsons - array that containes $json items) ** parameters can be any type of json encodable data (array, int, string, stdClass, any JsonSerializable object etc...). 
 - Commands automatically performs json encoding these data. Functions also returns json decoded data if the response is json string. 
 
 

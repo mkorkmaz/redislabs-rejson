@@ -15,7 +15,7 @@ ReJSON-PHP provides PHP Client for Redislabs' ReJSON. This library supports both
 
 ## ReJSON-PHP Interface
 
-Command methods are named after lowercase version of the original ReJSON commands.
+Commanda are named after lowercase version of the original ReJSON commands.
 
 ```php
 <?php

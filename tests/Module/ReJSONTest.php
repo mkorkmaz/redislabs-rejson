@@ -206,6 +206,8 @@ class ReJSONTest extends \Codeception\Test\Unit
         $this->assertEquals('qux', $this->reJsonModule->arrpop('test', '.', 5));
         $this->assertEquals($arrayNewSize-1, $this->reJsonModule->arrlen('test', '.'));
         $this->assertEquals(3, $this->reJsonModule->arrtrim('test', '.', 1, 3));
+        $this->assertEquals('quux', $this->reJsonModule->arrpop('test'));
+
     }
 
     /**

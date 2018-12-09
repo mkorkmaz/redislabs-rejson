@@ -112,5 +112,5 @@ var_dump($baz);
 You can use Docker Image provided by Redislabs.
 
 ```bash
-docker run -d -p 6379:6379 --name redis-rejson redislabs/rejson:latest
+docker run -p 6379:6379 redislabs/rejson:latest
 ```

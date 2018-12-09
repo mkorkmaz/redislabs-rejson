@@ -71,7 +71,7 @@ use Redislabs\Module\ReJSON\ReJSON;
 
 $redisClient = new Redis();
 $redisClient->connect('127.0.0.1');
-$reJSON = Client::createWithPhpRedis($redisClient);
+$reJSON = ReJSON::createWithPhpRedis($redisClient);
 ```
 
 ##### Example for Predis
@@ -109,7 +109,7 @@ var_dump($baz);
 
 ## Test and Development
 
-You can use Docker provided by Redislabs.
+You can use Docker Image provided by Redislabs.
 
 ```bash
 docker run -d -p 6379:6379 --name redis-rejson redislabs/rejson:latest

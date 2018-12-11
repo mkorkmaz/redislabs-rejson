@@ -21,7 +21,7 @@ class ReJSONTest extends \Codeception\Test\Unit
      * @var Predis\Client
      */
     private $redisClient;
-
+    // phpcs:disable
     protected function _before()
     {
         $this->redisClient = new Predis\Client();
@@ -32,7 +32,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     {
         $this->redisClient->flushall();
     }
-
+    // phpcs:enable
     /**
      * @test
      */

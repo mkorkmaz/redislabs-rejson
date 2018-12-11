@@ -10,6 +10,7 @@ before_script:
   - composer install -n
 script:
   - vendor/bin/codecept run unit --coverage --coverage-xml
+  - composer run phpcs
   - composer run phpstan
   - composer run bc-check
 after_script:

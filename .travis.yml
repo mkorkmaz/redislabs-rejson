@@ -11,6 +11,7 @@ before_script:
 script:
   - vendor/bin/codecept run unit --coverage --coverage-xml
   - composer run phpstan
+  - composer run bc-check
 after_script:
   - if [ $TRAVIS_PHP_VERSION = '7.2' ]; then php vendor/bin/php-coveralls; fi
 after_success:

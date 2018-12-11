@@ -34,7 +34,7 @@ final class Debug extends CommandAbstract implements CommandInterface
         return $new;
     }
 
-    public function createCommandWithArguments(string $subcommand, ?string $key, string $path) : CommandInterface
+    public static function createCommandWithArguments(string $subcommand, ?string $key, string $path) : CommandInterface
     {
         if (!in_array($subcommand, self::$validSubCommands, true)) {
             throw new InvalidDebugSubcommandException(
@@ -54,7 +54,6 @@ final class Debug extends CommandAbstract implements CommandInterface
         );
         return $debugObj->withArguments($key, new Path($path));
     }
-
 
     public static function createCommandWithHelpSubCommandAndArguments() : CommandInterface
     {

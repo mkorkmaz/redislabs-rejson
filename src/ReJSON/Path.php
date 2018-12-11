@@ -11,7 +11,7 @@ final class Path
     {
         $this->path = $path;
     }
-    
+
     public function getPath() : string
     {
         return $this->path;

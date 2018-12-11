@@ -37,6 +37,7 @@ class ReJSON implements ModuleInterface
             Delete::createCommandWithArguments($key, $path)
         );
     }
+
     public function forget(string $key, ?string $path = '.') : int
     {
         return $this->del($key, $path);
@@ -160,7 +161,6 @@ class ReJSON implements ModuleInterface
             Debug::createCommandWithArguments($subcommand, $key, $path)
         );
     }
-
 
     public function resp(string $key, ?string $paths = '.')
     {

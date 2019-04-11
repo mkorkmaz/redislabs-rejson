@@ -29,7 +29,7 @@ final class MultipleGet extends CommandAbstract implements CommandInterface
             );
         }
         $path = array_pop($arguments);
-        $keys = $arguments;
+        $keys = array_shift($arguments);
         return new self(
             $keys,
             new Path($path)

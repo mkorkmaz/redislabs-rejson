@@ -50,7 +50,7 @@ interface ReJSON
 
 ## Installation
 
-The recommended method to installing ReJSON-PHP is with composer.
+The recommended method to install ReJSON-PHP is with composer.
 
 ```bash
 composer require mkorkmaz/redislabs-rejson

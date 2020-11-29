@@ -21,7 +21,7 @@ final class MultipleGetArray extends CommandAbstract implements CommandInterface
             $resultArray = array_map([CommandAbstract::class, 'jsonDecode'], $result);
             $resultToReturn = [];
             $keysCount = count($keys);
-            for ($i=0; $i < $keysCount; $i++) {
+            for ($i = 0; $i < $keysCount; $i++) {
                 $resultToReturn[$keys[$i]] = $resultArray[$i];
             }
             return $resultToReturn;

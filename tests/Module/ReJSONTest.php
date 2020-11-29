@@ -170,12 +170,11 @@ class ReJSONTest extends \Codeception\Test\Unit
             'test1.foo = baz'
         );
 
-        $this->reJsonModule->set('test', '.', ['foo'=>'bar'], 'NX');
+        $this->reJsonModule->set('test', '.', ['foo' => 'bar'], 'NX');
         $this->reJsonModule->set('test', '.baz', 'qux');
         $this->reJsonModule->set('test', '.baz', 'quux', 'XX');
-        $this->reJsonModule->set('test2', '.', ['foo2'=>'bar2']);
-        var_dump($this->reJsonModule->mgetArray('test', 'test2','.'));
-
+        $this->reJsonModule->set('test2', '.', ['foo2' => 'bar2']);
+        var_dump($this->reJsonModule->mgetArray('test', 'test2', '.'));
     }
 
     /**

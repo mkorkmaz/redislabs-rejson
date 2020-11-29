@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -7,6 +8,7 @@ use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\ReJSON\Exceptions\InvalidDebugSubcommandException;
 use Redislabs\Module\ReJSON\Path;
+
 use function in_array;
 
 final class Debug extends CommandAbstract implements CommandInterface
@@ -34,7 +36,7 @@ final class Debug extends CommandAbstract implements CommandInterface
         return $new;
     }
 
-    public static function createCommandWithArguments(string $subcommand, ?string $key, string $path) : CommandInterface
+    public static function createCommandWithArguments(string $subcommand, ?string $key, string $path): CommandInterface
     {
         if (!in_array($subcommand, self::$validSubCommands, true)) {
             throw new InvalidDebugSubcommandException(
@@ -47,7 +49,7 @@ final class Debug extends CommandAbstract implements CommandInterface
         return self::createCommandWithHelpSubCommandAndArguments();
     }
 
-    public static function createCommandWithMemorySubCommandAndArguments(string $key, string $path) : CommandInterface
+    public static function createCommandWithMemorySubCommandAndArguments(string $key, string $path): CommandInterface
     {
         $debugObj = new self(
             'MEMORY'
@@ -55,7 +57,7 @@ final class Debug extends CommandAbstract implements CommandInterface
         return $debugObj->withArguments($key, new Path($path));
     }
 
-    public static function createCommandWithHelpSubCommandAndArguments() : CommandInterface
+    public static function createCommandWithHelpSubCommandAndArguments(): CommandInterface
     {
         return new self(
             'HELP'

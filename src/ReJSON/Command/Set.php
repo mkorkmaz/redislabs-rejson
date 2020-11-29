@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -6,8 +7,9 @@ namespace Redislabs\Module\ReJSON\Command;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\ReJSON\Path;
-use function in_array;
 use Redislabs\Module\ReJSON\Exceptions\InvalidExistentialModifierException;
+
+use function in_array;
 
 final class Set extends CommandAbstract implements CommandInterface
 {
@@ -22,7 +24,7 @@ final class Set extends CommandAbstract implements CommandInterface
         $this->arguments = [$key, $path->getPath(),  $json];
     }
 
-    public function withExistentialModifier(string $existentialModifier) : CommandInterface
+    public function withExistentialModifier(string $existentialModifier): CommandInterface
     {
         if (!in_array($existentialModifier, self::$validExistentialModifiers, true)) {
             throw new InvalidExistentialModifierException(
@@ -38,7 +40,7 @@ final class Set extends CommandAbstract implements CommandInterface
         string $path,
         $json,
         ?string $existentialModifier = null
-    ) : CommandInterface {
+    ): CommandInterface {
         $command = new self(
             $key,
             new Path($path),

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -19,7 +20,7 @@ final class ArrayAppend extends CommandAbstract implements CommandInterface
         $this->arguments = array_merge([$key, $path->getPath()], $jsons);
     }
 
-    public static function createCommandWithArguments(string $key, string $path, array $jsons) : CommandInterface
+    public static function createCommandWithArguments(string $key, string $path, array $jsons): CommandInterface
     {
         return new self(
             $key,

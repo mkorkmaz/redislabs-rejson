@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -28,7 +29,7 @@ final class Get extends CommandAbstract implements CommandInterface
         };
     }
 
-    public static function createCommandWithArguments(string $key, $paths = '.') : CommandInterface
+    public static function createCommandWithArguments(string $key, $paths = '.'): CommandInterface
     {
         $pathObjects = [];
         if (!is_array($paths)) {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -22,7 +23,7 @@ final class NumberMultiplyBy extends CommandAbstract implements CommandInterface
         };
     }
 
-    public static function createCommandWithArguments(string $key, string $path, int $incrementBy) : CommandInterface
+    public static function createCommandWithArguments(string $key, string $path, int $incrementBy): CommandInterface
     {
 
         return new self(

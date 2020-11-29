@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace RedislabsModulesTest\Module;
@@ -36,7 +37,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldGetReJSONModuleSuccessfully() : void
+    public function shouldGetReJSONModuleSuccessfully(): void
     {
         $this->assertInstanceOf(ReJSON::class, $this->reJsonModule, 'ReJSON module init.');
     }
@@ -44,7 +45,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldFailForInvalidReJSONCommand() : void
+    public function shouldFailForInvalidReJSONCommand(): void
     {
         $this->expectException(\Redislabs\Exceptions\InvalidCommandException::class);
         $this->reJsonModule->invalidCommand('-test-');
@@ -53,20 +54,20 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldFailReJSONCommandWhenInvalidExistentialModifierGiven() : void
+    public function shouldFailReJSONCommandWhenInvalidExistentialModifierGiven(): void
     {
         $this->expectException(\Redislabs\Module\ReJSON\Exceptions\InvalidExistentialModifierException::class);
-        $this->reJsonModule->set('test', '.', ['ttt' => ['deneme'=> 1]], 'NN');
+        $this->reJsonModule->set('test', '.', ['ttt' => ['deneme' => 1]], 'NN');
     }
 
     /**
      * @test
      */
-    public function shouldRunReJSONCommandSetAndGetAndTypeSuccessfully() : void
+    public function shouldRunReJSONCommandSetAndGetAndTypeSuccessfully(): void
     {
         $result = $this->reJsonModule->set('test', '.', [], 'NX');
         $this->assertEquals('OK', $result, 'JSON.SET sets new value');
-        $result = $this->reJsonModule->set('test', '.', ['foo'=>'bar'], 'XX');
+        $result = $this->reJsonModule->set('test', '.', ['foo' => 'bar'], 'XX');
         $this->assertEquals('OK', $result, 'JSON.SET sets .foo value');
         $result = $this->reJsonModule->set('test', '.baz', 'qux');
         $this->assertEquals('OK', $result, 'JSON.SET sets .baz:qux value');
@@ -91,12 +92,12 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldRunReJSONCommandDelAndForgetSuccessfully() : void
+    public function shouldRunReJSONCommandDelAndForgetSuccessfully(): void
     {
         $result = $this->reJsonModule->set(
             'test',
             '.',
-            ['foo'=>'bar', 'baz' => 'qux', 'quux' => ['quuz'=>'corge']],
+            ['foo' => 'bar', 'baz' => 'qux', 'quux' => ['quuz' => 'corge']],
             'NX'
         );
         $this->assertEquals('OK', $result, 'JSON.SET sets new value');
@@ -112,7 +113,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldFailForReJSONCommandMgetWhenNumberOfArgumentsAreInsufficient() : void
+    public function shouldFailForReJSONCommandMgetWhenNumberOfArgumentsAreInsufficient(): void
     {
         $this->expectException(\Redislabs\Exceptions\InvalidNumberOfArgumentsException::class);
         /**
@@ -124,7 +125,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldRunReJSONCommandMgetSuccessfully() : void
+    public function shouldRunReJSONCommandMgetSuccessfully(): void
     {
         /**
          * @var ReJSON $jsonModule
@@ -155,14 +156,12 @@ class ReJSONTest extends \Codeception\Test\Unit
             $mgetResult[3],
             'test4.foo is null'
         );
-
-
     }
 
     /**
      * @test
      */
-    public function shouldRunReJSONNumCommandsSuccessfully() : void
+    public function shouldRunReJSONNumCommandsSuccessfully(): void
     {
         /**
          * @var ReJSON $jsonModule
@@ -170,15 +169,15 @@ class ReJSONTest extends \Codeception\Test\Unit
         $this->reJsonModule->set('test', '.', ['foo' => 1]);
         $value = $this->reJsonModule->get('test', 'foo');
         $incrementedValue = $this->reJsonModule->numincrby('test', 'foo', 4);
-        $this->assertEquals($value+4, $incrementedValue);
+        $this->assertEquals($value + 4, $incrementedValue);
         $multipliedValue = $this->reJsonModule->nummultby('test', 'foo', 2);
-        $this->assertEquals($incrementedValue*2, $multipliedValue);
+        $this->assertEquals($incrementedValue * 2, $multipliedValue);
     }
 
     /**
      * @test
      */
-    public function shouldRunReJSONStringCommandsSuccessfully() : void
+    public function shouldRunReJSONStringCommandsSuccessfully(): void
     {
         /**
          * @var ReJSON $jsonModule
@@ -193,21 +192,21 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldRunReJSONArrayCommandsSuccessfully() : void
+    public function shouldRunReJSONArrayCommandsSuccessfully(): void
     {
         /**
          * @var ReJSON $jsonModule
          */
         $this->reJsonModule->set('test', '.', ['foo', 'bar']);
         $appendedArraysLength = $this->reJsonModule->arrappend('test', '.', 'baz', 'qux');
-        $this->assertEquals(2+2, $appendedArraysLength);
+        $this->assertEquals(2 + 2, $appendedArraysLength);
         $this->assertEquals(1, $this->reJsonModule->arrindex('test', '.', 'bar'));
         $this->assertEquals(-1, $this->reJsonModule->arrindex('test', '.', 'quuz'));
         $arrayNewSize = $this->reJsonModule->arrinsert('test', '.', 2, 'quuz', 'quux');
         $this->assertEquals(6, $arrayNewSize);
         $this->assertEquals($arrayNewSize, $this->reJsonModule->arrlen('test', '.'));
         $this->assertEquals('qux', $this->reJsonModule->arrpop('test', '.', 5));
-        $this->assertEquals($arrayNewSize-1, $this->reJsonModule->arrlen('test', '.'));
+        $this->assertEquals($arrayNewSize - 1, $this->reJsonModule->arrlen('test', '.'));
         $this->assertEquals(3, $this->reJsonModule->arrtrim('test', '.', 1, 3));
         $this->assertEquals('quux', $this->reJsonModule->arrpop('test'));
     }
@@ -215,7 +214,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldRunReJSONObjectCommandsSuccessfully() : void
+    public function shouldRunReJSONObjectCommandsSuccessfully(): void
     {
         /**
          * @var ReJSON $jsonModule
@@ -229,7 +228,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldRunReJSONDebugCommandsSuccessfully() : void
+    public function shouldRunReJSONDebugCommandsSuccessfully(): void
     {
         /**
          * @var ReJSON $jsonModule
@@ -244,7 +243,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldFailForInvalidDebugCommand() : void
+    public function shouldFailForInvalidDebugCommand(): void
     {
         $this->expectException(\Redislabs\Module\ReJSON\Exceptions\InvalidDebugSubcommandException::class);
         /**
@@ -256,7 +255,7 @@ class ReJSONTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldRunReJSONRespCommandSuccessfully() : void
+    public function shouldRunReJSONRespCommandSuccessfully(): void
     {
         /**
          * @var ReJSON $jsonModule

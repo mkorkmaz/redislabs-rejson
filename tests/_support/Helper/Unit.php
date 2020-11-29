@@ -1,4 +1,5 @@
 <?php
+
 namespace RedislabsModulesTest\Helper;
 
 // here you can define custom actions

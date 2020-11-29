@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -25,7 +26,7 @@ final class ArrayInsert extends CommandAbstract implements CommandInterface
         string $path,
         int $index,
         array $jsons
-    ) : CommandInterface {
+    ): CommandInterface {
         return new self(
             $key,
             new Path($path),

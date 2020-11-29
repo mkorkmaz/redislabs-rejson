@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -18,7 +19,7 @@ final class ArrayLength extends CommandAbstract implements CommandInterface
         $this->arguments = [$key, $path->getPath()];
     }
 
-    public static function createCommandWithArguments(string $key, $path = '.') : CommandInterface
+    public static function createCommandWithArguments(string $key, $path = '.'): CommandInterface
     {
 
         return new self(

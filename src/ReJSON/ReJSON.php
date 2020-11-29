@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON;
@@ -29,16 +30,17 @@ use Redislabs\Module\ReJSON\Command\Resp;
 class ReJSON implements ModuleInterface
 {
     use ModuleTrait;
+
     protected static $moduleName = 'ReJSON';
 
-    public function del(string $key, ?string $path = '.') : int
+    public function del(string $key, ?string $path = '.'): int
     {
         return $this->runCommand(
             Delete::createCommandWithArguments($key, $path)
         );
     }
 
-    public function forget(string $key, ?string $path = '.') : int
+    public function forget(string $key, ?string $path = '.'): int
     {
         return $this->del($key, $path);
     }

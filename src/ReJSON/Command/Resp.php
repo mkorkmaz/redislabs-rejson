@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -19,7 +20,7 @@ final class Resp extends CommandAbstract implements CommandInterface
         // $this->responseCallback = function ($result) {return json_decode($result);};
     }
 
-    public static function createCommandWithArguments(string $key, $path = '.') : CommandInterface
+    public static function createCommandWithArguments(string $key, $path = '.'): CommandInterface
     {
         return new self(
             $key,

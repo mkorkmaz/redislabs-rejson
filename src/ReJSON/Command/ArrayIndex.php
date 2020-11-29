@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -27,7 +28,7 @@ final class ArrayIndex extends CommandAbstract implements CommandInterface
         $json,
         int $start,
         int $stop
-    ) : CommandInterface {
+    ): CommandInterface {
         return new self(
             $key,
             new Path($path),

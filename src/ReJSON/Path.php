@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON;
@@ -12,7 +13,7 @@ final class Path
         $this->path = $path;
     }
 
-    public function getPath() : string
+    public function getPath(): string
     {
         return $this->path;
     }

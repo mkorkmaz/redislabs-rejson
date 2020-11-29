@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -22,7 +23,7 @@ final class ArrayPop extends CommandAbstract implements CommandInterface
         };
     }
 
-    public static function createCommandWithArguments(string $key, string $path, int $index) : CommandInterface
+    public static function createCommandWithArguments(string $key, string $path, int $index): CommandInterface
     {
         return new self(
             $key,

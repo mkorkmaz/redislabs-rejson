@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -19,7 +20,7 @@ final class StringAppend extends CommandAbstract implements CommandInterface
         $this->arguments = [$key, $path->getPath(), $json];
     }
 
-    public static function createCommandWithArguments(string $key, string $path, $json) : CommandInterface
+    public static function createCommandWithArguments(string $key, string $path, $json): CommandInterface
     {
         return new self(
             $key,

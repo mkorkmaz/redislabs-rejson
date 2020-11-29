@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -21,9 +22,9 @@ final class MultipleGet extends CommandAbstract implements CommandInterface
         };
     }
 
-    public static function createCommandWithArguments(array $arguments) : CommandInterface
+    public static function createCommandWithArguments(array $arguments): CommandInterface
     {
-        if (count($arguments) <2) {
+        if (count($arguments) < 2) {
             throw new InvalidNumberOfArgumentsException(
                 sprintf('ReJSON::mget needs at least 2 arguments!, % given', count($arguments))
             );

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON\Command;
@@ -17,7 +18,7 @@ final class ObjectKeys extends CommandAbstract implements CommandInterface
         $this->arguments = [$key,  $path->getPath()];
     }
 
-    public static function createCommandWithArguments(string $key, string $path) : CommandInterface
+    public static function createCommandWithArguments(string $key, string $path): CommandInterface
     {
         return new self(
             $key,

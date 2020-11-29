@@ -16,8 +16,8 @@ final class MultipleGet extends CommandAbstract implements CommandInterface
     {
         $this->arguments = $keys;
         $this->arguments[] = $path->getPath();
-        $this->responseCallback = function ($result) {
-            return array_map('json_decode', $result);
+        $this->responseCallback = static function ($result) {
+            return array_map([CommandAbstract::class, 'jsonDecode'], $result);
         };
     }
 

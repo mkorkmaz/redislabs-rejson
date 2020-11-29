@@ -3,18 +3,22 @@ sudo: false
 services:
   - docker
 php:
-  - 7.2
-before_install: echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - 7.3
+  - 7.4
+  - nightly
+before_install:
+  - pecl install -f redis <<< ''
 before_script:
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - docker run -d -p 6379:6379 --name redis-rejson redislabs/rejson:latest
   - composer install -n
 script:
+  - export XDEBUG_MODE=coverage
   - vendor/bin/codecept run unit --coverage --coverage-xml
   - composer run phpcs
   - composer run phpstan
-  - composer run bc-check
 after_script:
-  - if [ $TRAVIS_PHP_VERSION = '7.2' ]; then php vendor/bin/php-coveralls; fi
+  - if [ $TRAVIS_PHP_VERSION = '7.4' ]; then php vendor/bin/php-coveralls; fi
 after_success:
   - travis_retry php vendor/bin/php-coveralls -v
   - vendor/bin/test-reporter

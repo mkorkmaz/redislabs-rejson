@@ -43,19 +43,19 @@ class ReJSONTest extends \Codeception\Test\Unit
 
     /**
      * @test
-     * @expectedException \Redislabs\Exceptions\InvalidCommandException
      */
     public function shouldFailForInvalidReJSONCommand() : void
     {
+        $this->expectException(\Redislabs\Exceptions\InvalidCommandException::class);
         $this->reJsonModule->invalidCommand('-test-');
     }
 
     /**
      * @test
-     * @expectedException \Redislabs\Module\ReJSON\Exceptions\InvalidExistentialModifierException
      */
     public function shouldFailReJSONCommandWhenInvalidExistentialModifierGiven() : void
     {
+        $this->expectException(\Redislabs\Module\ReJSON\Exceptions\InvalidExistentialModifierException::class);
         $this->reJsonModule->set('test', '.', ['ttt' => ['deneme'=> 1]], 'NN');
     }
 
@@ -111,10 +111,10 @@ class ReJSONTest extends \Codeception\Test\Unit
 
     /**
      * @test
-     * @expectedException \Redislabs\Exceptions\InvalidNumberOfArgumentsException
      */
     public function shouldFailForReJSONCommandMgetWhenNumberOfArgumentsAreInsufficient() : void
     {
+        $this->expectException(\Redislabs\Exceptions\InvalidNumberOfArgumentsException::class);
         /**
          * @var ReJSON $jsonModule
          */
@@ -134,6 +134,7 @@ class ReJSONTest extends \Codeception\Test\Unit
         $this->reJsonModule->set('test3', '.', ['foo' => 'qux']);
         $this->reJsonModule->set('test4', '.', []);
         $mgetResult = $this->reJsonModule->mget('test1', 'test2', 'test3', 'test4', '.foo');
+
         $this->assertEquals(
             'baz',
             $mgetResult[0],
@@ -154,6 +155,8 @@ class ReJSONTest extends \Codeception\Test\Unit
             $mgetResult[3],
             'test4.foo is null'
         );
+
+
     }
 
     /**
@@ -232,7 +235,7 @@ class ReJSONTest extends \Codeception\Test\Unit
          * @var ReJSON $jsonModule
          */
         $help = $this->reJsonModule->debug('HELP');
-        $this->assertContains('HELP', $help[1]);
+        $this->assertStringContainsString('HELP', $help[1]);
         $this->reJsonModule->set('test', '.', ['foo', 'bar']);
         $memory = $this->reJsonModule->debug('MEMORY', 'test', '.');
         $this->assertEquals(94, $memory);
@@ -240,10 +243,10 @@ class ReJSONTest extends \Codeception\Test\Unit
 
     /**
      * @test
-     * @expectedException \Redislabs\Module\ReJSON\Exceptions\InvalidDebugSubcommandException
      */
     public function shouldFailForInvalidDebugCommand() : void
     {
+        $this->expectException(\Redislabs\Module\ReJSON\Exceptions\InvalidDebugSubcommandException::class);
         /**
          * @var ReJSON $jsonModule
          */

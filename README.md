@@ -24,9 +24,11 @@ interface ReJSON
 {
     public function set(string $key, string $path, $json, ?string $existentialModifier = null); // $existentialModifiers: ['NX', 'XX']
     public function get(string $key, $paths = null);
+    public function getArray(string $key, $paths = null);
     public function del(string $key, ?string $path = '.') : int;
     public function forget(string $key, ?string $path = '.') : int;    
-    public function mget(...$keys, string $path);
+    public function mget(...$keys, string $path);  
+    public function mgetArray(...$keys, string $path);
     public function type(string $key, ?string $paths = '.');
     public function numincrby(string $key, string $path, int $incrementBy);
     public function nummultby(string $key, string $path, int $multiplyBy);
@@ -99,10 +101,42 @@ $reJSON = ReJSON::createWithPredis($redisClient);
 $reJSON->set('test', '.', ['foo'=>'bar'], 'NX');
 $reJSON->set('test', '.baz', 'qux');
 $reJSON->set('test', '.baz', 'quux', 'XX');
+$reJSON->set('test2', '.', ['foo2'=>'bar2']);
 $baz = $reJSON->get('test', '.baz');
 
 var_dump($baz); 
 // Prints string(4) "quux"
+$array = $reJSON->getArray('test', '.');
+var_dump($array); 
+/*
+Prints result as an array instead of an object
+array(2) {
+  ["foo"]=>
+  string(3) "bar"
+  ["baz"]=>
+  string(4) "quux"
+}
+
+*/
+$array = $reJSON->mgetArray('test', 'test2', '.');
+var_dump($array); 
+/*
+Prints result as an associative array instead of an object
+array(2) {
+  ["test"]=>
+  array(2) {
+    ["foo"]=>
+    string(3) "bar"
+    ["baz"]=>
+    string(4) "quux"
+  }
+  ["test2"]=>
+  array(1) {
+    ["foo2"]=>
+    string(3) "bar2"
+  }
+}
+*/
 
 ```
 

@@ -87,6 +87,12 @@ class ReJSONTest extends \Codeception\Test\Unit
         );
         $this->reJsonModule->set('test', '.num', 1);
         $this->assertEquals('integer', $this->reJsonModule->type('test', '.num'));
+        $root = $this->reJsonModule->getArray('test');
+        $this->assertEquals(
+            'bar',
+            $root['foo'],
+            'JSON.GET . and check for root element foo has correct value'
+        );
     }
 
     /**
@@ -134,8 +140,8 @@ class ReJSONTest extends \Codeception\Test\Unit
         $this->reJsonModule->set('test2', '.', ['foo' => 'bar']);
         $this->reJsonModule->set('test3', '.', ['foo' => 'qux']);
         $this->reJsonModule->set('test4', '.', []);
+        $this->reJsonModule->set('test5', '.', ['foo' => ['bar' => 'baz']]);
         $mgetResult = $this->reJsonModule->mget('test1', 'test2', 'test3', 'test4', '.foo');
-
         $this->assertEquals(
             'baz',
             $mgetResult[0],
@@ -156,6 +162,20 @@ class ReJSONTest extends \Codeception\Test\Unit
             $mgetResult[3],
             'test4.foo is null'
         );
+        $mgetResult = $this->reJsonModule->mgetArray('test1', 'test5', '.');
+
+        $this->assertEquals(
+            'baz',
+            $mgetResult['test5']['foo']['bar'],
+            'test1.foo = baz'
+        );
+
+        $this->reJsonModule->set('test', '.', ['foo'=>'bar'], 'NX');
+        $this->reJsonModule->set('test', '.baz', 'qux');
+        $this->reJsonModule->set('test', '.baz', 'quux', 'XX');
+        $this->reJsonModule->set('test2', '.', ['foo2'=>'bar2']);
+        var_dump($this->reJsonModule->mgetArray('test', 'test2','.'));
+
     }
 
     /**

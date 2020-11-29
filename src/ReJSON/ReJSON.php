@@ -8,8 +8,10 @@ use Redislabs\Interfaces\ModuleInterface;
 use Redislabs\Module\ModuleTrait;
 use Redislabs\Module\ReJSON\Command\Delete;
 use Redislabs\Module\ReJSON\Command\Get;
+use Redislabs\Module\ReJSON\Command\GetArray;
 use Redislabs\Module\ReJSON\Command\Set;
 use Redislabs\Module\ReJSON\Command\MultipleGet;
+use Redislabs\Module\ReJSON\Command\MultipleGetArray;
 use Redislabs\Module\ReJSON\Command\Type;
 use Redislabs\Module\ReJSON\Command\NumberIncrementBy;
 use Redislabs\Module\ReJSON\Command\NumberMultiplyBy;
@@ -59,6 +61,12 @@ class ReJSON implements ModuleInterface
         );
     }
 
+    public function getArray(string $key, $paths = null)
+    {
+        return $this->runCommand(
+            GetArray::createCommandWithArguments($key, $paths)
+        );
+    }
     public function mget(...$arguments)
     {
         return $this->runCommand(
@@ -66,6 +74,12 @@ class ReJSON implements ModuleInterface
         );
     }
 
+    public function mgetArray(...$arguments)
+    {
+        return $this->runCommand(
+            MultipleGetArray::createCommandWithArguments($arguments)
+        );
+    }
     public function type(string $key, ?string $paths = '.')
     {
         return $this->runCommand(

@@ -8,7 +8,7 @@ use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\ReJSON\Path;
 
-final class Get extends CommandAbstract implements CommandInterface
+final class GetArray extends CommandAbstract implements CommandInterface
 {
     protected static $command = 'JSON.GET';
 
@@ -23,7 +23,7 @@ final class Get extends CommandAbstract implements CommandInterface
         $this->arguments = array_merge($this->arguments, $paths);
         $this->responseCallback = function ($result) {
             if ($result !== null) {
-                return json_decode($result);
+                return json_decode($result, (bool) JSON_OBJECT_AS_ARRAY, 512 , JSON_THROW_ON_ERROR);
             }
             return null;
         };

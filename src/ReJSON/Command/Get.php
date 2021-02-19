@@ -22,7 +22,7 @@ final class Get extends CommandAbstract implements CommandInterface
         $this->arguments = [$key];
         $this->arguments = array_merge($this->arguments, $paths);
         $this->responseCallback = function ($result) {
-            if ($result !== null) {
+            if (!empty($result)) {
                 return json_decode($result);
             }
             return null;

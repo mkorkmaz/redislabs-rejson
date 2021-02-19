@@ -174,7 +174,6 @@ class ReJSONTest extends \Codeception\Test\Unit
         $this->reJsonModule->set('test', '.baz', 'qux');
         $this->reJsonModule->set('test', '.baz', 'quux', 'XX');
         $this->reJsonModule->set('test2', '.', ['foo2' => 'bar2']);
-        var_dump($this->reJsonModule->mgetArray('test', 'test2', '.'));
     }
 
     /**

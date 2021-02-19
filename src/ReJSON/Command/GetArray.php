@@ -20,7 +20,7 @@ final class GetArray extends CommandAbstract implements CommandInterface
             return $path->getPath();
         }, $paths);
         $this->arguments = [$key];
-        $this->arguments = array_merge($this->arguments, $paths);
+        $this->arguments = array_merge($this->arguments, ['NOESCAPE'], $paths);
         $this->responseCallback = function ($result) {
             if (!empty($result)) {
                 return json_decode($result, (bool) JSON_OBJECT_AS_ARRAY, 512, JSON_THROW_ON_ERROR);

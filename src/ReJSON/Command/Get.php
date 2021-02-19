@@ -20,7 +20,7 @@ final class Get extends CommandAbstract implements CommandInterface
             return $path->getPath();
         }, $paths);
         $this->arguments = [$key];
-        $this->arguments = array_merge($this->arguments, $paths);
+        $this->arguments = array_merge($this->arguments, ['NOESCAPE'], $paths);
         $this->responseCallback = function ($result) {
             if (!empty($result)) {
                 return json_decode($result);

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\ReJSON\Command;
+namespace Redislabs\Module\RedisJSON\Command;
 
 use Redislabs\Exceptions\InvalidNumberOfArgumentsException;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
-use Redislabs\Module\ReJSON\Path;
+use Redislabs\Module\RedisJSON\Path;
 
-final class MultipleGetArray extends CommandAbstract implements CommandInterface
+final class MultipleGet extends CommandAbstract implements CommandInterface
 {
     protected static $command = 'JSON.MGET';
 
@@ -17,14 +17,8 @@ final class MultipleGetArray extends CommandAbstract implements CommandInterface
     {
         $this->arguments = $keys;
         $this->arguments[] = $path->getPath();
-        $this->responseCallback = static function ($result) use ($keys) {
-            $resultArray = array_map([CommandAbstract::class, 'jsonDecode'], $result);
-            $resultToReturn = [];
-            $keysCount = count($keys);
-            for ($i = 0; $i < $keysCount; $i++) {
-                $resultToReturn[$keys[$i]] = $resultArray[$i];
-            }
-            return $resultToReturn;
+        $this->responseCallback = static function ($result) {
+            return array_map('json_decode', $result);
         };
     }
 

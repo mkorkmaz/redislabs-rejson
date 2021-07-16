@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\ReJSON\Command;
+namespace Redislabs\Module\RedisJSON\Command;
 
-use Redislabs\Exceptions\InvalidNumberOfArgumentsException;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
-use Redislabs\Module\ReJSON\Path;
+use Redislabs\Module\RedisJSON\Path;
 
-final class ObjectKeys extends CommandAbstract implements CommandInterface
+final class ObjectLength extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.OBJKEYS';
+    protected static $command = 'JSON.OBJLEN';
 
     private function __construct(string $key, Path $path)
     {

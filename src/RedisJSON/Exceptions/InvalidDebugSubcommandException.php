@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\ReJSON\Exceptions;
+namespace Redislabs\Module\RedisJSON\Exceptions;
 
 class InvalidDebugSubcommandException extends \InvalidArgumentException
 {

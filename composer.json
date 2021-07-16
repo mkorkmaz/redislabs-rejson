@@ -1,6 +1,6 @@
 {
     "name": "mkorkmaz/redislabs-rejson",
-    "description": "PHP Client for Redislabs ReJSON Module.",
+    "description": "Redislabs RedisJSON aka ReJSON Module Client for PHP that supports Predis and PhpRedis",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -13,7 +13,7 @@
     "require": {
         "php": "^7.3 | ^8.0",
         "ext-json": "*",
-        "mkorkmaz/redislabs-common": "^0.2"
+        "mkorkmaz/redislabs-common": "^1.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
@@ -31,7 +31,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Redislabs\\Module\\ReJSON\\": "src/ReJSON"
+            "Redislabs\\Module\\ReJSON\\": "src/ReJSON",
+            "Redislabs\\Module\\RedisJSON\\": "src/RedisJSON"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RedislabsModulesTest\\": "tests"
         }
     },
     "scripts": {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\ReJSON\Command;
+namespace Redislabs\Module\RedisJSON\Command;
 
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
-use Redislabs\Module\ReJSON\Path;
-use Redislabs\Module\ReJSON\Exceptions\InvalidExistentialModifierException;
+use Redislabs\Module\RedisJSON\Path;
+use Redislabs\Module\RedisJSON\Exceptions\InvalidExistentialModifierException;
 
 use function in_array;
 

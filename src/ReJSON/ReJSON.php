@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Redislabs\Module\ReJSON;
 
-use Redislabs\Module\RedisJSON\RedisJSON;
+use Redislabs\Module\RedisJson\RedisJson;
 
-class ReJSON extends RedisJSON
+class ReJSON extends RedisJson
 {
 }

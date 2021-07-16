@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\RedisJSON;
+namespace Redislabs\Module\RedisJson;
 
 final class Path
 {

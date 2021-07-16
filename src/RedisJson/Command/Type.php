@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\RedisJSON\Command;
+namespace Redislabs\Module\RedisJson\Command;
 
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
-use Redislabs\Module\RedisJSON\Path;
+use Redislabs\Module\RedisJson\Path;
 
-final class Resp extends CommandAbstract implements CommandInterface
+final class Type extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.RESP';
+    protected static $command = 'JSON.TYPE';
 
     private function __construct(
         string $key,
@@ -21,6 +21,7 @@ final class Resp extends CommandAbstract implements CommandInterface
 
     public static function createCommandWithArguments(string $key, $path = '.'): CommandInterface
     {
+
         return new self(
             $key,
             new Path($path)

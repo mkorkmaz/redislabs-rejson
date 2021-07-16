@@ -2,37 +2,37 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\RedisJSON;
+namespace Redislabs\Module\RedisJson;
 
 use Redislabs\Module\ModuleTrait;
-use Redislabs\Module\RedisJSON\Command\Delete;
-use Redislabs\Module\RedisJSON\Command\Get;
-use Redislabs\Module\RedisJSON\Command\GetArray;
-use Redislabs\Module\RedisJSON\Command\Set;
-use Redislabs\Module\RedisJSON\Command\MultipleGet;
-use Redislabs\Module\RedisJSON\Command\MultipleGetArray;
-use Redislabs\Module\RedisJSON\Command\Type;
-use Redislabs\Module\RedisJSON\Command\NumberIncrementBy;
-use Redislabs\Module\RedisJSON\Command\NumberMultiplyBy;
-use Redislabs\Module\RedisJSON\Command\StringAppend;
-use Redislabs\Module\RedisJSON\Command\StringLength;
-use Redislabs\Module\RedisJSON\Command\ArrayAppend;
-use Redislabs\Module\RedisJSON\Command\ArrayIndex;
-use Redislabs\Module\RedisJSON\Command\ArrayInsert;
-use Redislabs\Module\RedisJSON\Command\ArrayLength;
-use Redislabs\Module\RedisJSON\Command\ArrayPop;
-use Redislabs\Module\RedisJSON\Command\ArrayTrim;
-use Redislabs\Module\RedisJSON\Command\ObjectKeys;
-use Redislabs\Module\RedisJSON\Command\ObjectLength;
-use Redislabs\Module\RedisJSON\Command\Debug;
-use Redislabs\Module\RedisJSON\Command\Forget;
-use Redislabs\Module\RedisJSON\Command\Resp;
+use Redislabs\Module\RedisJson\Command\Delete;
+use Redislabs\Module\RedisJson\Command\Get;
+use Redislabs\Module\RedisJson\Command\GetArray;
+use Redislabs\Module\RedisJson\Command\Set;
+use Redislabs\Module\RedisJson\Command\MultipleGet;
+use Redislabs\Module\RedisJson\Command\MultipleGetArray;
+use Redislabs\Module\RedisJson\Command\Type;
+use Redislabs\Module\RedisJson\Command\NumberIncrementBy;
+use Redislabs\Module\RedisJson\Command\NumberMultiplyBy;
+use Redislabs\Module\RedisJson\Command\StringAppend;
+use Redislabs\Module\RedisJson\Command\StringLength;
+use Redislabs\Module\RedisJson\Command\ArrayAppend;
+use Redislabs\Module\RedisJson\Command\ArrayIndex;
+use Redislabs\Module\RedisJson\Command\ArrayInsert;
+use Redislabs\Module\RedisJson\Command\ArrayLength;
+use Redislabs\Module\RedisJson\Command\ArrayPop;
+use Redislabs\Module\RedisJson\Command\ArrayTrim;
+use Redislabs\Module\RedisJson\Command\ObjectKeys;
+use Redislabs\Module\RedisJson\Command\ObjectLength;
+use Redislabs\Module\RedisJson\Command\Debug;
+use Redislabs\Module\RedisJson\Command\Forget;
+use Redislabs\Module\RedisJson\Command\Resp;
 
-class RedisJSON implements RedisJsonInterface
+class RedisJson implements RedisJsonInterface
 {
     use ModuleTrait;
 
-    protected static $moduleName = 'ReJSON';
+    protected static $moduleName = 'ReJson';
 
     public function del(string $key, ?string $path = '.'): int
     {

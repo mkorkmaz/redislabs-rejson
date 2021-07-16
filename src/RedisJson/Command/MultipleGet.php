@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\RedisJSON\Command;
+namespace Redislabs\Module\RedisJson\Command;
 
 use Redislabs\Exceptions\InvalidNumberOfArgumentsException;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
-use Redislabs\Module\RedisJSON\Path;
+use Redislabs\Module\RedisJson\Path;
 
 final class MultipleGet extends CommandAbstract implements CommandInterface
 {
@@ -26,7 +26,7 @@ final class MultipleGet extends CommandAbstract implements CommandInterface
     {
         if (count($arguments) < 2) {
             throw new InvalidNumberOfArgumentsException(
-                sprintf('ReJSON::mget needs at least 2 arguments!, % given', count($arguments))
+                sprintf('ReJson::mget needs at least 2 arguments!, % given', count($arguments))
             );
         }
         $path = array_pop($arguments);

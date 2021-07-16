@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\RedisJSON\Command;
+namespace Redislabs\Module\RedisJson\Command;
 
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
-use Redislabs\Module\RedisJSON\Path;
+use Redislabs\Module\RedisJson\Path;
 
-final class Type extends CommandAbstract implements CommandInterface
+final class ArrayLength extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.TYPE';
+    protected static $command = 'JSON.ARRLEN';
 
     private function __construct(
         string $key,

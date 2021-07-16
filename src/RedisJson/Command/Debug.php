@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\RedisJSON\Command;
+namespace Redislabs\Module\RedisJson\Command;
 
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
-use Redislabs\Module\RedisJSON\Exceptions\InvalidDebugSubcommandException;
-use Redislabs\Module\RedisJSON\Path;
+use Redislabs\Module\RedisJson\Exceptions\InvalidDebugSubcommandException;
+use Redislabs\Module\RedisJson\Path;
 
 use function in_array;
 

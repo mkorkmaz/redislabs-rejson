@@ -32,7 +32,7 @@
     "autoload": {
         "psr-4": {
             "Redislabs\\Module\\ReJSON\\": "src/ReJSON",
-            "Redislabs\\Module\\RedisJSON\\": "src/RedisJSON"
+            "Redislabs\\Module\\RedisJson\\": "src/RedisJson"
         }
     },
     "autoload-dev": {

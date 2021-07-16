@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Redislabs\Module\RedisJSON;
+namespace Redislabs\Module\RedisJson;
 
 use Redislabs\Interfaces\ModuleInterface;
 use Predis\ClientInterface as PredisClient;

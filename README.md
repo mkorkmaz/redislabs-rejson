@@ -154,5 +154,5 @@ array(2) {
 You can use Docker Image provided by Redislabs.
 
 ```bash
-docker run -p 6379:6379 redislabs/rejson:latest
+docker run -p 6379:6379 redislabs/rejson:1.0.7
 ```

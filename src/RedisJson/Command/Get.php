@@ -7,38 +7,37 @@ namespace Redislabs\Module\RedisJson\Command;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\RedisJson\Path;
+use Redislabs\Module\RedisJson\RedisJson;
 
 final class Get extends CommandAbstract implements CommandInterface
 {
     protected static $command = 'JSON.GET';
 
-    private function __construct(
-        string $key,
-        array $paths
-    ) {
+    private function __construct(string $key, array $pathItems)
+    {
         $paths = array_map(static function (Path $path) {
             return $path->getPath();
-        }, $paths);
+        }, $pathItems);
         $this->arguments = [$key];
         $this->arguments = array_merge($this->arguments, ['NOESCAPE'], $paths);
-        $this->responseCallback = function ($result) {
+        $this->responseCallback = static function ($result) use ($pathItems) {
             if (!empty($result)) {
-                return json_decode($result);
+                return RedisJson::getResult($result, $pathItems);
             }
             return null;
         };
     }
 
-    public static function createCommandWithArguments(string $key, $paths = '.'): CommandInterface
+    public static function createCommandWithArguments(array $arguments): CommandInterface
     {
+        $key = array_shift($arguments);
         $pathObjects = [];
-        if (!is_array($paths)) {
-            $paths = (array) $paths;
-        }
-        foreach ($paths as $path) {
+        foreach ($arguments as $path) {
             $pathObjects[] = new Path($path);
         }
-
+        if (count($arguments) === 0) {
+            $pathObjects[] = new Path('.');
+        }
         return new self(
             $key,
             $pathObjects

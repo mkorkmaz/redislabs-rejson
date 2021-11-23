@@ -7,6 +7,7 @@ namespace Redislabs\Module\RedisJson\Command;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\RedisJson\Path;
+use Redislabs\Module\RedisJson\RedisJson;
 
 final class ArrayIndex extends CommandAbstract implements CommandInterface
 {
@@ -20,6 +21,9 @@ final class ArrayIndex extends CommandAbstract implements CommandInterface
         int $stop
     ) {
         $this->arguments = [$key, $path->getPath(), $json, $start, $stop];
+        $this->responseCallback = static function ($result) use ($path) {
+           return RedisJson::getArrayResult($result, [$path]);
+        };
     }
 
     public static function createCommandWithArguments(

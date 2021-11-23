@@ -7,6 +7,7 @@ namespace Redislabs\Module\RedisJson\Command;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\RedisJson\Path;
+use Redislabs\Module\RedisJson\RedisJson;
 
 final class ArrayTrim extends CommandAbstract implements CommandInterface
 {
@@ -19,6 +20,12 @@ final class ArrayTrim extends CommandAbstract implements CommandInterface
         int $stop
     ) {
         $this->arguments = [$key, $path->getPath(), $start, $stop];
+        $this->responseCallback = static function ($result) use ($path) {
+            if (!empty($result)) {
+                return RedisJson::getArrayResult($result, [$path]);
+            }
+            return null;
+        };
     }
 
     public static function createCommandWithArguments(

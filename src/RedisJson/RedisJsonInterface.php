@@ -11,12 +11,10 @@ use Redis as PhpRedisClient;
 interface RedisJsonInterface extends ModuleInterface
 {
     public function set(string $key, string $path, $json, ?string $existentialModifier = null);
-    public function get(string $key, $paths = null);
-    public function getArray(string $key, $paths = null);
+    public function get(...$arguments);
     public function del(string $key, ?string $path = '.'): int;
     public function forget(string $key, ?string $path = '.'): int;
     public function mget(...$arguments);
-    public function mgetArray(...$arguments);
     public function type(string $key, ?string $paths = '.');
     public function numincrby(string $key, string $path, int $incrementBy);
     public function nummultby(string $key, string $path, int $multiplyBy);

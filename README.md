@@ -1,4 +1,4 @@
-# RedisJSON-PHP: Redislabs RedisJSON aka ReJson Client for PHP
+# RedisJSON-PHP: Redislabs RedisJSON aka ReJson Version 2 Client for PHP
 
 RedisJSON-PHP provides a client for Redislabs' ReJSON Module for PHP. This library supports both widely used redis clients ([PECL Redis Extension](https://github.com/phpredis/phpredis/#readme) and [Predis](https://github.com/nrk/predis)).  
 
@@ -27,12 +27,10 @@ use Redis as PhpRedisClient;
 interface RedisJsonInterface extends ModuleInterface
 {
     public function set(string $key, string $path, $json, ?string $existentialModifier = null);
-    public function get(string $key, $paths = null);
-    public function getArray(string $key, $paths = null);
+    public function get(...$arguments);
     public function del(string $key, ?string $path = '.'): int;
     public function forget(string $key, ?string $path = '.'): int;
     public function mget(...$arguments);
-    public function mgetArray(...$arguments);
     public function type(string $key, ?string $paths = '.');
     public function numincrby(string $key, string $path, int $incrementBy);
     public function nummultby(string $key, string $path, int $multiplyBy);
@@ -58,10 +56,16 @@ interface RedisJsonInterface extends ModuleInterface
 
 ## Installation
 
-The recommended method to install RedisJSON-PHP is with composer.
+The recommended method to install RedisJSON-PHP for ReJSON is with composer.
 
 ```bash
 composer require mkorkmaz/redislabs-rejson
+```
+
+If you use Redis ReJSON module version 1.0:
+
+```bash
+composer require mkorkmaz/redislabs-rejson:"^1.0"
 ```
 
 ## Usage
@@ -114,7 +118,7 @@ $baz = $redisJson->get('test', '.baz');
 
 var_dump($baz); 
 // Prints string(4) "quux"
-$array = $redisJson->getArray('test', '.');
+$array = $redisJson->get('test', '.');
 var_dump($array); 
 /*
 Prints result as an array instead of an object
@@ -126,7 +130,7 @@ array(2) {
 }
 
 */
-$array = $redisJson->mgetArray('test', 'test2', '.');
+$array = $redisJson->mget('test', 'test2', '.');
 var_dump($array); 
 /*
 Prints result as an associative array instead of an object
@@ -154,5 +158,5 @@ array(2) {
 You can use Docker Image provided by Redislabs.
 
 ```bash
-docker run -p 6379:6379 redislabs/rejson:latest
+docker run -p 6379:6379 redislabs/rejson:2.0.4
 ```

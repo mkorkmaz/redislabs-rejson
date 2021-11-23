@@ -7,6 +7,7 @@ namespace Redislabs\Module\RedisJson\Command;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\RedisJson\Path;
+use Redislabs\Module\RedisJson\RedisJson;
 
 final class StringAppend extends CommandAbstract implements CommandInterface
 {
@@ -18,6 +19,18 @@ final class StringAppend extends CommandAbstract implements CommandInterface
         string $json
     ) {
         $this->arguments = [$key, $path->getPath(), $json];
+        $this->responseCallback = static function ($result) use ($path) {
+            if (!empty($result)) {
+                if ($path->isLegacyPath() === false && count($result) === 1) {
+                    return $result[0];
+                }
+                if ($path->isLegacyPath() === false && count($result) > 1) {
+                    return $result;
+                }
+                return $result;
+            }
+            return null;
+        };
     }
 
     public static function createCommandWithArguments(string $key, string $path, $json): CommandInterface

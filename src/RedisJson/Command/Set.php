@@ -41,10 +41,14 @@ final class Set extends CommandAbstract implements CommandInterface
         $json,
         ?string $existentialModifier = null
     ): CommandInterface {
+        $jsonString = json_encode($json, JSON_THROW_ON_ERROR);
+        if ($jsonString === '[]') {
+            $jsonString ='{}';
+        }
         $command = new self(
             $key,
             new Path($path),
-            json_encode($json)
+            $jsonString
         );
         if ($existentialModifier !== null) {
              return $command->withExistentialModifier($existentialModifier);

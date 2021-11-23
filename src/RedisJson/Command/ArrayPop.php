@@ -7,6 +7,7 @@ namespace Redislabs\Module\RedisJson\Command;
 use Redislabs\Interfaces\CommandInterface;
 use Redislabs\Command\CommandAbstract;
 use Redislabs\Module\RedisJson\Path;
+use Redislabs\Module\RedisJson\RedisJson;
 
 final class ArrayPop extends CommandAbstract implements CommandInterface
 {
@@ -18,8 +19,9 @@ final class ArrayPop extends CommandAbstract implements CommandInterface
         int $index
     ) {
         $this->arguments = [$key, $path->getPath(), $index];
-        $this->responseCallback = function ($result) {
-            return json_decode($result);
+        $this->responseCallback = static function ($result) use ($path) {
+            var_dump($result);
+            return RedisJson::getArrayResult($result, [$path]);
         };
     }
 

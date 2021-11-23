@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Redislabs\Module\RedisJson;
 
+use Redislabs\Interfaces\RedisClientInterface;
 use Redislabs\Module\ModuleTrait;
 use Redislabs\Module\RedisJson\Command\Delete;
 use Redislabs\Module\RedisJson\Command\Get;
-use Redislabs\Module\RedisJson\Command\GetArray;
 use Redislabs\Module\RedisJson\Command\Set;
 use Redislabs\Module\RedisJson\Command\MultipleGet;
-use Redislabs\Module\RedisJson\Command\MultipleGetArray;
 use Redislabs\Module\RedisJson\Command\Type;
 use Redislabs\Module\RedisJson\Command\NumberIncrementBy;
 use Redislabs\Module\RedisJson\Command\NumberMultiplyBy;
@@ -25,14 +24,53 @@ use Redislabs\Module\RedisJson\Command\ArrayTrim;
 use Redislabs\Module\RedisJson\Command\ObjectKeys;
 use Redislabs\Module\RedisJson\Command\ObjectLength;
 use Redislabs\Module\RedisJson\Command\Debug;
-use Redislabs\Module\RedisJson\Command\Forget;
 use Redislabs\Module\RedisJson\Command\Resp;
+use Redislabs\Module\RedisJSON\Exceptions\RedisJSONModuleNotFound;
+use Redislabs\Module\RedisJSON\Exceptions\RedisJSONModuleVersionNotSupported;
 
 class RedisJson implements RedisJsonInterface
 {
     use ModuleTrait;
+    private $moduleVersion;
 
-    protected static $moduleName = 'ReJson';
+    protected static $moduleName = 'ReJSON';
+
+    public function __construct(RedisClientInterface $redisClient)
+    {
+        $this->setModuleVersion($redisClient->rawCommand('MODULE', ['LIST']));
+        if ($this->moduleVersion['major'] < 2 ) {
+            throw new RedisJSONModuleVersionNotSupported(
+                sprintf('This library does not support RedisJSON Module version lower than 2. You use %d', $this->moduleVersion['major'])
+            );
+        }
+        $this->redisClient = $redisClient;
+    }
+
+    private function setModuleVersion(array $modules) : void
+    {
+        $moduleData = array_values(
+            array_filter($modules, static function ($module) { return $module[1] === self::$moduleName;})
+        );
+        if (count($moduleData) === 0) {
+            throw new RedisJSONModuleNotFound(
+                'You need to have Redis ReJSON module to use this library. Please check https://oss.redis.com/redisjson'
+            );
+        }
+        $redisModuleVersionMajor = floor($moduleData[0][3]/10000);
+        $redisModuleVersionMinor = floor(($moduleData[0][3] - $redisModuleVersionMajor * 10000) / 100);
+        $redisModuleVersionPatch = $moduleData[0][3] - $redisModuleVersionMajor * 10000 - $redisModuleVersionMinor * 100;
+        $this->moduleVersion = [
+            'version' => $moduleData[0][3],
+            'major' => $redisModuleVersionMajor,
+            'minor' => $redisModuleVersionMinor,
+            'patch' => $redisModuleVersionPatch,
+            'semver' => implode('.', [
+                $redisModuleVersionMajor,
+                $redisModuleVersionMinor,
+                $redisModuleVersionPatch
+            ]),
+        ];
+    }
 
     public function del(string $key, ?string $path = '.'): int
     {
@@ -53,19 +91,13 @@ class RedisJson implements RedisJsonInterface
         );
     }
 
-    public function get(string $key, $paths = null)
+    public function get(...$arguments)
     {
         return $this->runCommand(
-            Get::createCommandWithArguments($key, $paths)
+            Get::createCommandWithArguments($arguments)
         );
     }
 
-    public function getArray(string $key, $paths = null)
-    {
-        return $this->runCommand(
-            GetArray::createCommandWithArguments($key, $paths)
-        );
-    }
     public function mget(...$arguments)
     {
         return $this->runCommand(
@@ -73,12 +105,6 @@ class RedisJson implements RedisJsonInterface
         );
     }
 
-    public function mgetArray(...$arguments)
-    {
-        return $this->runCommand(
-            MultipleGetArray::createCommandWithArguments($arguments)
-        );
-    }
     public function type(string $key, ?string $paths = '.')
     {
         return $this->runCommand(
@@ -183,4 +209,60 @@ class RedisJson implements RedisJsonInterface
             Resp::createCommandWithArguments($key, $paths)
         );
     }
+
+    /**
+     * @param string|null $result
+     * @param Path[] $paths
+     * @return mixed
+     * @throws \JsonException
+     */
+    public static function getResult(string$result, array $paths)
+    {
+        $result = json_decode($result, (bool) JSON_OBJECT_AS_ARRAY, 512, JSON_THROW_ON_ERROR);
+        if (count($paths) === 1 && $paths[0]->isLegacyPath() === false) {
+            return count($result) === 1 ? $result[0] : $result;
+        }
+        if (count($paths) > 1) {
+            $resultArray = [];
+            foreach ($result as $itemKey => $itemValue) {
+                $resultArray[$itemKey] = count($itemValue) === 1 ? $itemValue[0] : $itemValue;
+            }
+            return $resultArray;
+        }
+        return $result;
+    }
+
+    /**
+     * @param mixed $result
+     * @param Path[] $paths
+     * @return mixed
+     * @throws \JsonException
+     */
+    public static function getArrayResult($result, array $paths)
+    {
+        if (!empty($result) && count($paths) === 1) {
+            if ($paths[0]->isLegacyPath() === false) {
+                return (is_string($result[0])) ? json_decode($result[0], true, 512, JSON_THROW_ON_ERROR) :  $result[0];
+            }
+            return (is_string($result)) ? json_decode($result, true, 512, JSON_THROW_ON_ERROR) :  $result;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param mixed $result
+     * @return mixed
+     * @throws \JsonException
+     */
+    public static function getNumResult($result)
+    {
+        $result = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+        if (is_countable($result) && count($result) === 1) {
+            return $result[0];
+        }
+        return $result;
+    }
+
+
 }

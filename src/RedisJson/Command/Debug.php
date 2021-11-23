@@ -17,9 +17,8 @@ final class Debug extends CommandAbstract implements CommandInterface
 
     private static $validSubCommands = ['MEMORY', 'HELP'];
 
-    private function __construct(
-        string $subcommand
-    ) {
+    private function __construct(string $subcommand)
+    {
         $this->arguments = [$subcommand];
     }
 
@@ -54,7 +53,20 @@ final class Debug extends CommandAbstract implements CommandInterface
         $debugObj = new self(
             'MEMORY'
         );
-        return $debugObj->withArguments($key, new Path($path));
+        $pathObject = new Path($path);
+        $debugObj->responseCallback = static function ($result) use ($pathObject) {
+            if (!empty($result)) {
+                if ($pathObject->isLegacyPath() === false && count($result) === 1) {
+                    return $result[0];
+                }
+                if ($pathObject->isLegacyPath() === false && count($result) > 1) {
+                    return $result;
+                }
+                return $result;
+            }
+            return null;
+        };
+        return $debugObj->withArguments($key, $pathObject);
     }
 
     public static function createCommandWithHelpSubCommandAndArguments(): CommandInterface

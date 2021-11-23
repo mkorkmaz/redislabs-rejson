@@ -57,7 +57,7 @@ class RedisJSONTest extends \Codeception\Test\Unit
      */
     public function shouldFailReJSONCommandWhenInvalidExistentialModifierGiven(): void
     {
-        $this->expectException(\Redislabs\Module\RedisJson\Exceptions\InvalidExistentialModifierException::class);
+        $this->expectException(\Redislabs\Module\RedisJSON\Exceptions\InvalidExistentialModifierException::class);
         $this->reJsonModule->set('test', '.', ['ttt' => ['deneme' => 1]], 'NN');
     }
 
@@ -77,7 +77,7 @@ class RedisJSONTest extends \Codeception\Test\Unit
         $root = $this->reJsonModule->get('test');
         $this->assertEquals(
             'bar',
-            $root->foo,
+            $root['foo'],
             'JSON.GET . and check for root element foo has correct value'
         );
         $baz = $this->reJsonModule->get('test', '.baz');
@@ -88,13 +88,8 @@ class RedisJSONTest extends \Codeception\Test\Unit
         );
         $this->reJsonModule->set('test', '.num', 1);
         $this->assertEquals('integer', $this->reJsonModule->type('test', '.num'));
-        $root = $this->reJsonModule->getArray('test');
-        $this->assertEquals(
-            'bar',
-            $root['foo'],
-            'JSON.GET . and check for root element foo has correct value'
-        );
     }
+
 
     /**
      * @test
@@ -109,11 +104,11 @@ class RedisJSONTest extends \Codeception\Test\Unit
         );
         $this->assertEquals('OK', $result, 'JSON.SET sets new value');
         $root = $this->reJsonModule->get('test', '.');
-        $this->assertEquals('bar', $root->foo);
+        $this->assertEquals('bar', $root['foo']);
         $this->assertEquals(1, $this->reJsonModule->del('test', $path = '.foo'), 'Trying to delete .foo');
         $this->assertEquals(1, $this->reJsonModule->forget('test', $path = '.quux.quuz'), 'Trying to delete .baz.quux');
         $root = $this->reJsonModule->get('test', '.');
-        $this->assertEquals('qux', $root->baz);
+        $this->assertEquals('qux', $root['baz']);
         $this->assertEquals(1, $this->reJsonModule->del('test', $path = '.'), 'Trying to delete root');
     }
 
@@ -145,36 +140,24 @@ class RedisJSONTest extends \Codeception\Test\Unit
         $mgetResult = $this->reJsonModule->mget('test1', 'test2', 'test3', 'test4', '.foo');
         $this->assertEquals(
             'baz',
-            $mgetResult[0],
+            $mgetResult['test1'],
             'test1.foo = baz'
         );
         $this->assertEquals(
             'bar',
-            $mgetResult[1],
+            $mgetResult['test2'],
             'test2.foo = bar'
         );
         $this->assertEquals(
             'qux',
-            $mgetResult[2],
+            $mgetResult['test3'],
             'test3.foo = quuz'
         );
         $this->assertEquals(
             null,
-            $mgetResult[3],
+            $mgetResult['test4'],
             'test4.foo is null'
         );
-        $mgetResult = $this->reJsonModule->mgetArray('test1', 'test5', '.');
-
-        $this->assertEquals(
-            'baz',
-            $mgetResult['test5']['foo']['bar'],
-            'test1.foo = baz'
-        );
-
-        $this->reJsonModule->set('test', '.', ['foo' => 'bar'], 'NX');
-        $this->reJsonModule->set('test', '.baz', 'qux');
-        $this->reJsonModule->set('test', '.baz', 'quux', 'XX');
-        $this->reJsonModule->set('test2', '.', ['foo2' => 'bar2']);
     }
 
     /**
@@ -256,7 +239,7 @@ class RedisJSONTest extends \Codeception\Test\Unit
         $this->assertStringContainsString('HELP', $help[1]);
         $this->reJsonModule->set('test', '.', ['foo', 'bar']);
         $memory = $this->reJsonModule->debug('MEMORY', 'test', '.');
-        $this->assertEquals(94, $memory);
+        $this->assertEquals(24, $memory);
     }
 
     /**
@@ -264,12 +247,13 @@ class RedisJSONTest extends \Codeception\Test\Unit
      */
     public function shouldFailForInvalidDebugCommand(): void
     {
-        $this->expectException(\Redislabs\Module\RedisJson\Exceptions\InvalidDebugSubcommandException::class);
+        $this->expectException(\Redislabs\Module\RedisJSON\Exceptions\InvalidDebugSubcommandException::class);
         /**
          * @var ReJSON $jsonModule
          */
         $this->reJsonModule->debug('LS');
     }
+
 
     /**
      * @test
@@ -281,8 +265,8 @@ class RedisJSONTest extends \Codeception\Test\Unit
          */
         $this->reJsonModule->set('test', '.', ['foo' => 'bar', 'baz' => 'quz']);
         $resp = $this->reJsonModule->resp('test');
-        $this->assertEquals(['foo', 'bar'], $resp[1]);
-        $this->assertEquals(['baz', 'quz'], $resp[2]);
-        $this->assertCount(3, $resp);
+        $this->assertEquals(['foo', 'bar'], [$resp[1], $resp[2]]);
+        $this->assertEquals(['baz', 'quz'], [$resp[3], $resp[4]]);
+        $this->assertCount(5, $resp);
     }
 }

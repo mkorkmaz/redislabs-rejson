@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @link https://opensource.adobe.com/Spry/samples/data_region/JSONDataSetSample.html
  */
+
 return array(
     'id' => '0001',
     'type' => 'donut',

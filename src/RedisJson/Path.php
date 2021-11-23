@@ -24,7 +24,7 @@ final class Path
         return $this->path;
     }
 
-    public function isLegacyPath() : bool
+    public function isLegacyPath(): bool
     {
         return $this->isLegacyPath;
     }

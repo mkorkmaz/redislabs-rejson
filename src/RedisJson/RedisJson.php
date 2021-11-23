@@ -25,12 +25,13 @@ use Redislabs\Module\RedisJson\Command\ObjectKeys;
 use Redislabs\Module\RedisJson\Command\ObjectLength;
 use Redislabs\Module\RedisJson\Command\Debug;
 use Redislabs\Module\RedisJson\Command\Resp;
-use Redislabs\Module\RedisJSON\Exceptions\RedisJSONModuleNotFound;
-use Redislabs\Module\RedisJSON\Exceptions\RedisJSONModuleVersionNotSupported;
+use Redislabs\Module\RedisJson\Exceptions\RedisJsonModuleNotFound;
+use Redislabs\Module\RedisJson\Exceptions\RedisJsonModuleVersionNotSupported;
 
 class RedisJson implements RedisJsonInterface
 {
     use ModuleTrait;
+
     private $moduleVersion;
 
     protected static $moduleName = 'ReJSON';
@@ -38,25 +39,27 @@ class RedisJson implements RedisJsonInterface
     public function __construct(RedisClientInterface $redisClient)
     {
         $this->setModuleVersion($redisClient->rawCommand('MODULE', ['LIST']));
-        if ($this->moduleVersion['major'] < 2 ) {
-            throw new RedisJSONModuleVersionNotSupported(
+        if ($this->moduleVersion['major'] < 2) {
+            throw new RedisJsonModuleVersionNotSupported(
                 sprintf('This library does not support RedisJSON Module version lower than 2. You use %d', $this->moduleVersion['major'])
             );
         }
         $this->redisClient = $redisClient;
     }
 
-    private function setModuleVersion(array $modules) : void
+    private function setModuleVersion(array $modules): void
     {
         $moduleData = array_values(
-            array_filter($modules, static function ($module) { return $module[1] === self::$moduleName;})
+            array_filter($modules, static function ($module) {
+                return $module[1] === self::$moduleName;
+            })
         );
         if (count($moduleData) === 0) {
-            throw new RedisJSONModuleNotFound(
+            throw new RedisJsonModuleNotFound(
                 'You need to have Redis ReJSON module to use this library. Please check https://oss.redis.com/redisjson'
             );
         }
-        $redisModuleVersionMajor = floor($moduleData[0][3]/10000);
+        $redisModuleVersionMajor = floor($moduleData[0][3] / 10000);
         $redisModuleVersionMinor = floor(($moduleData[0][3] - $redisModuleVersionMajor * 10000) / 100);
         $redisModuleVersionPatch = $moduleData[0][3] - $redisModuleVersionMajor * 10000 - $redisModuleVersionMinor * 100;
         $this->moduleVersion = [
@@ -211,12 +214,12 @@ class RedisJson implements RedisJsonInterface
     }
 
     /**
-     * @param string|null $result
+     * @param string $result
      * @param Path[] $paths
      * @return mixed
      * @throws \JsonException
      */
-    public static function getResult(string$result, array $paths)
+    public static function getResult(string $result, array $paths)
     {
         $result = json_decode($result, (bool) JSON_OBJECT_AS_ARRAY, 512, JSON_THROW_ON_ERROR);
         if (count($paths) === 1 && $paths[0]->isLegacyPath() === false) {
@@ -263,6 +266,4 @@ class RedisJson implements RedisJsonInterface
         }
         return $result;
     }
-
-
 }

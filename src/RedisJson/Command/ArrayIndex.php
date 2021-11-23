@@ -22,7 +22,7 @@ final class ArrayIndex extends CommandAbstract implements CommandInterface
     ) {
         $this->arguments = [$key, $path->getPath(), $json, $start, $stop];
         $this->responseCallback = static function ($result) use ($path) {
-           return RedisJson::getArrayResult($result, [$path]);
+            return RedisJson::getArrayResult($result, [$path]);
         };
     }
 

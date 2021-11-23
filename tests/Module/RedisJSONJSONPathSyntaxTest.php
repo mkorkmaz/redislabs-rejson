@@ -85,7 +85,6 @@ class RedisJSONJSONPathSyntaxTest extends \Codeception\Test\Unit
         $this->reJsonModule->set('doc', '$', json_decode('{"a":2, "b": 3, "nested": {"a": 4, "b": null}}', true));
         $this->assertEquals([3, null], $this->reJsonModule->get('doc', '$..b'));
         $this->assertEquals(['..a' => [2, 4], '$..b' => [3, null]], $this->reJsonModule->get('doc', '..a', '$..b'));
-
     }
 
     /**

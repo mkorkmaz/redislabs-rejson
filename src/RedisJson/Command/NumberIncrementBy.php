@@ -19,8 +19,8 @@ final class NumberIncrementBy extends CommandAbstract implements CommandInterfac
         int $incrementBy
     ) {
         $this->arguments = [$key, $path->getPath(), $incrementBy];
-        $this->responseCallback = function ($result) use ($path) {
-            return RedisJson::getNumResult($result, [$path]);
+        $this->responseCallback = function ($result) {
+            return RedisJson::getNumResult($result);
         };
     }
 

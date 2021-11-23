@@ -43,7 +43,7 @@ final class Set extends CommandAbstract implements CommandInterface
     ): CommandInterface {
         $jsonString = json_encode($json, JSON_THROW_ON_ERROR);
         if ($jsonString === '[]') {
-            $jsonString ='{}';
+            $jsonString = '{}';
         }
         $command = new self(
             $key,

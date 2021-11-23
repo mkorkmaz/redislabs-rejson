@@ -42,7 +42,7 @@
     },
     "scripts": {
         "unit-tests": "vendor/bin/codecept run unit --coverage",
-        "phpstan": "vendor/bin/phpstan analyse  -l 4 src",
+        "phpstan": "vendor/bin/phpstan analyse -l 5 src",
         "phpcs": "vendor/bin/phpcs --standard=PSR12 src tests",
         "phpcbf": "vendor/bin/phpcbf --standard=PSR12 src tests"
     }

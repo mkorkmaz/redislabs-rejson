@@ -9,7 +9,7 @@ use Redislabs\Module\ReJSON\ReJSON;
 use Redislabs\Module\RedisJson\RedisJson;
 use RedislabsModulesTest\UnitTester;
 
-class RedisJSONJSONPathSyntaxTest extends \Codeception\Test\Unit
+class RedisJsonJsonPathSyntaxTest extends \Codeception\Test\Unit
 {
     /**
      * @var UnitTester
@@ -130,8 +130,10 @@ class RedisJSONJSONPathSyntaxTest extends \Codeception\Test\Unit
         $this->assertEquals('OK', $result, 'JSON.SET sets new value');
         $root = $this->reJsonModule->get('test', '$');
         $this->assertEquals('bar', $root['foo']);
-        $this->assertEquals(1, $this->reJsonModule->del('test', $path = '$.foo'), 'Trying to delete .foo');
-        $this->assertEquals(1, $this->reJsonModule->forget('test', $path = '$.quux.quuz'), 'Trying to delete .baz.quux');
+        $this->assertEquals(1, $this->reJsonModule
+            ->del('test', $path = '$.foo'), 'Trying to delete .foo');
+        $this->assertEquals(1, $this->reJsonModule
+            ->forget('test', $path = '$.quux.quuz'), 'Trying to delete .baz.quux');
         $root = $this->reJsonModule->get('test', '$');
         $this->assertEquals('qux', $root['baz']);
         $this->assertEquals(1, $this->reJsonModule->del('test', $path = '$'), 'Trying to delete root');
@@ -259,7 +261,11 @@ class RedisJSONJSONPathSyntaxTest extends \Codeception\Test\Unit
         /**
          * @var ReJSON $jsonModule
          */
-        $this->reJsonModule->set('test', '$', json_decode('{"a":[3],"d":{"e":"value"}, "nested": {"a": {"b":2, "c": 1}}}', true));
+        $this->reJsonModule->set(
+            'test',
+            '$',
+            json_decode('{"a":[3],"d":{"e":"value"}, "nested": {"a": {"b":2, "c": 1}}}', true)
+        );
         $this->assertEquals([null, ['b', 'c']], $this->reJsonModule->objkeys('test', '$..a'));
         $this->assertEquals('e', $this->reJsonModule->objkeys('test', '$.d'));
 

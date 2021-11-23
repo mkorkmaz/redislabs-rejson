@@ -8,7 +8,7 @@ use Predis;
 use Redislabs\Module\ReJSON\ReJSON;
 use Redislabs\Module\RedisJson\RedisJson;
 
-class RedisJSONTest extends \Codeception\Test\Unit
+class RedisJsonTest extends \Codeception\Test\Unit
 {
     /**
      * @var \RedislabsModulesTest\UnitTester

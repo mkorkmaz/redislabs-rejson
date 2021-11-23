@@ -41,7 +41,10 @@ class RedisJson implements RedisJsonInterface
         $this->setModuleVersion($redisClient->rawCommand('MODULE', ['LIST']));
         if ($this->moduleVersion['major'] < 2) {
             throw new RedisJsonModuleVersionNotSupported(
-                sprintf('This library does not support RedisJSON Module version lower than 2. You use %d', $this->moduleVersion['major'])
+                sprintf(
+                    'This library does not support RedisJSON Module version lower than 2. You use %d',
+                    $this->moduleVersion['major']
+                )
             );
         }
         $this->redisClient = $redisClient;
@@ -61,7 +64,8 @@ class RedisJson implements RedisJsonInterface
         }
         $redisModuleVersionMajor = floor($moduleData[0][3] / 10000);
         $redisModuleVersionMinor = floor(($moduleData[0][3] - $redisModuleVersionMajor * 10000) / 100);
-        $redisModuleVersionPatch = $moduleData[0][3] - $redisModuleVersionMajor * 10000 - $redisModuleVersionMinor * 100;
+        $redisModuleVersionPatch = $moduleData[0][3] - $redisModuleVersionMajor * 10000
+            - $redisModuleVersionMinor * 100;
         $this->moduleVersion = [
             'version' => $moduleData[0][3],
             'major' => $redisModuleVersionMajor,

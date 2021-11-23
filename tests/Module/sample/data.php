@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @link https://opensource.adobe.com/Spry/samples/data_region/JSONDataSetSample.html
  */
+
+declare(strict_types=1);
 
 return array(
     'id' => '0001',

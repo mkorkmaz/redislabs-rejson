@@ -20,7 +20,6 @@ final class ArrayPop extends CommandAbstract implements CommandInterface
     ) {
         $this->arguments = [$key, $path->getPath(), $index];
         $this->responseCallback = static function ($result) use ($path) {
-            var_dump($result);
             return RedisJson::getArrayResult($result, [$path]);
         };
     }

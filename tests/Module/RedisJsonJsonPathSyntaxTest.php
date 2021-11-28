@@ -295,7 +295,7 @@ class RedisJsonJsonPathSyntaxTest extends \Codeception\Test\Unit
      */
     public function shouldFailForInvalidDebugCommand(): void
     {
-        $this->expectException(\Redislabs\Module\RedisJSON\Exceptions\InvalidDebugSubcommandException::class);
+        $this->expectException(\Redislabs\Module\RedisJson\Exceptions\InvalidDebugSubcommandException::class);
         /**
          * @var ReJSON $jsonModule
          */

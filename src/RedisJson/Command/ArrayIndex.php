@@ -36,7 +36,7 @@ final class ArrayIndex extends CommandAbstract implements CommandInterface
         return new self(
             $key,
             new Path($path),
-            json_encode($json),
+            json_encode($json, JSON_THROW_ON_ERROR),
             $start,
             $stop
         );

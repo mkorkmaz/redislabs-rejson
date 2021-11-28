@@ -8,7 +8,7 @@ use Predis;
 use Redislabs\Module\ReJSON\ReJSON;
 use Redislabs\Module\RedisJson\RedisJson;
 
-class RedisJsonTest extends \Codeception\Test\Unit
+class RedisJsonLegacyPathTest extends \Codeception\Test\Unit
 {
     /**
      * @var \RedislabsModulesTest\UnitTester
@@ -57,7 +57,7 @@ class RedisJsonTest extends \Codeception\Test\Unit
      */
     public function shouldFailReJSONCommandWhenInvalidExistentialModifierGiven(): void
     {
-        $this->expectException(\Redislabs\Module\RedisJSON\Exceptions\InvalidExistentialModifierException::class);
+        $this->expectException(\Redislabs\Module\RedisJson\Exceptions\InvalidExistentialModifierException::class);
         $this->reJsonModule->set('test', '.', ['ttt' => ['deneme' => 1]], 'NN');
     }
 
@@ -247,7 +247,7 @@ class RedisJsonTest extends \Codeception\Test\Unit
      */
     public function shouldFailForInvalidDebugCommand(): void
     {
-        $this->expectException(\Redislabs\Module\RedisJSON\Exceptions\InvalidDebugSubcommandException::class);
+        $this->expectException(\Redislabs\Module\RedisJson\Exceptions\InvalidDebugSubcommandException::class);
         /**
          * @var ReJSON $jsonModule
          */

@@ -7,5 +7,4 @@ namespace RedislabsModulesTest\Helper;
 
 class Unit extends \Codeception\Module
 {
-
 }

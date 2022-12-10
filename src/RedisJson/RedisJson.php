@@ -233,7 +233,8 @@ class RedisJson implements RedisJsonInterface
         if (count($paths) > 1) {
             $resultArray = [];
             foreach ($result as $itemKey => $itemValue) {
-                $resultArray[$itemKey] = (is_countable($itemValue) ? count($itemValue) : 0) === 1 ? $itemValue[0] : $itemValue;
+                $resultArray[$itemKey] = (is_countable($itemValue) ? count($itemValue) : 0) === 1 ? $itemValue[0]
+                    : $itemValue;
             }
             return $resultArray;
         }

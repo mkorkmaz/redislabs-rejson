@@ -6,5 +6,4 @@ namespace Redislabs\Module\RedisJson\Exceptions;
 
 class RedisJsonModuleVersionNotSupported extends \InvalidArgumentException
 {
-
 }

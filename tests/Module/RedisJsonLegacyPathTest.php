@@ -236,7 +236,7 @@ class RedisJsonLegacyPathTest extends \Codeception\Test\Unit
         $this->assertStringContainsString('HELP', $help[1]);
         $this->reJsonModule->set('test', '.', ['foo', 'bar']);
         $memory = $this->reJsonModule->debug('MEMORY', 'test', '.');
-        $this->assertEquals(30, $memory);
+        $this->assertEqualsWithDelta(30, $memory, 6);
     }
 
     /**

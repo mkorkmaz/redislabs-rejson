@@ -15,9 +15,7 @@ final class Get extends CommandAbstract implements CommandInterface
 
     private function __construct(string $key, array $pathItems)
     {
-        $paths = array_map(static function (Path $path) {
-            return $path->getPath();
-        }, $pathItems);
+        $paths = array_map(static fn(Path $path) => $path->getPath(), $pathItems);
         $this->arguments = [$key];
         $this->arguments = array_merge($this->arguments, ['NOESCAPE'], $paths);
         $this->responseCallback = static function ($result) use ($pathItems) {

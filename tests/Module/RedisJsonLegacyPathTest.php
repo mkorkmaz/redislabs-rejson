@@ -19,10 +19,7 @@ class RedisJsonLegacyPathTest extends \Codeception\Test\Unit
      * @var ReJSON
      */
     protected $reJsonModule;
-    /**
-     * @var Predis\Client
-     */
-    private $redisClient;
+    private ?\Predis\Client $redisClient = null;
     // phpcs:disable
     protected function _before()
     {
@@ -239,7 +236,7 @@ class RedisJsonLegacyPathTest extends \Codeception\Test\Unit
         $this->assertStringContainsString('HELP', $help[1]);
         $this->reJsonModule->set('test', '.', ['foo', 'bar']);
         $memory = $this->reJsonModule->debug('MEMORY', 'test', '.');
-        $this->assertEquals(24, $memory);
+        $this->assertEquals(30, $memory);
     }
 
     /**

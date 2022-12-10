@@ -19,9 +19,7 @@ final class ArrayAppend extends CommandAbstract implements CommandInterface
         array $jsons
     ) {
         $this->arguments = array_merge([$key, $path->getPath()], $jsons);
-        $this->responseCallback = function ($result) use ($path) {
-            return RedisJson::getArrayResult($result, [$path]);
-        };
+        $this->responseCallback = fn($result) => RedisJson::getArrayResult($result, [$path]);
     }
 
     public static function createCommandWithArguments(string $key, string $path, array $jsons): CommandInterface

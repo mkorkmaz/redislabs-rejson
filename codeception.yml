@@ -15,6 +15,9 @@ paths:
     output: tests/_output
     support: tests/_support
     data: tests
+extensions:
+    enabled:
+        - Codeception\Extension\DotReporter
 coverage:
     enabled: true
     include:

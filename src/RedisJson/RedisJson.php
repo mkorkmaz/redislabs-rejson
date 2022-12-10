@@ -32,7 +32,7 @@ class RedisJson implements RedisJsonInterface
 {
     use ModuleTrait;
 
-    private $moduleVersion;
+    private array $moduleVersion;
 
     protected static $moduleName = 'ReJSON';
 
@@ -53,9 +53,7 @@ class RedisJson implements RedisJsonInterface
     private function setModuleVersion(array $modules): void
     {
         $moduleData = array_values(
-            array_filter($modules, static function ($module) {
-                return $module[1] === self::$moduleName;
-            })
+            array_filter($modules, static fn($module) => $module[1] === self::$moduleName)
         );
         if (count($moduleData) === 0) {
             throw new RedisJsonModuleNotFound(
@@ -93,9 +91,13 @@ class RedisJson implements RedisJsonInterface
 
     public function set(string $key, string $path, $json, ?string $existentialModifier = null)
     {
-        return $this->runCommand(
+        $setCommandResult = $this->runCommand(
             Set::createCommandWithArguments($key, $path, $json, $existentialModifier)
         );
+        if ($setCommandResult !== true && $setCommandResult !== 'OK') {
+            return "";
+        }
+        return 'OK';
     }
 
     public function get(...$arguments)
@@ -218,7 +220,6 @@ class RedisJson implements RedisJsonInterface
     }
 
     /**
-     * @param string $result
      * @param Path[] $paths
      * @return mixed
      * @throws \JsonException
@@ -227,12 +228,12 @@ class RedisJson implements RedisJsonInterface
     {
         $result = json_decode($result, (bool) JSON_OBJECT_AS_ARRAY, 512, JSON_THROW_ON_ERROR);
         if (count($paths) === 1 && $paths[0]->isLegacyPath() === false) {
-            return count($result) === 1 ? $result[0] : $result;
+            return (is_countable($result) ? count($result) : 0) === 1 ? $result[0] : $result;
         }
         if (count($paths) > 1) {
             $resultArray = [];
             foreach ($result as $itemKey => $itemValue) {
-                $resultArray[$itemKey] = count($itemValue) === 1 ? $itemValue[0] : $itemValue;
+                $resultArray[$itemKey] = (is_countable($itemValue) ? count($itemValue) : 0) === 1 ? $itemValue[0] : $itemValue;
             }
             return $resultArray;
         }
@@ -240,12 +241,11 @@ class RedisJson implements RedisJsonInterface
     }
 
     /**
-     * @param mixed $result
      * @param Path[] $paths
      * @return mixed
      * @throws \JsonException
      */
-    public static function getArrayResult($result, array $paths)
+    public static function getArrayResult(mixed $result, array $paths)
     {
         if (!empty($result) && count($paths) === 1) {
             if ($paths[0]->isLegacyPath() === false) {
@@ -258,11 +258,10 @@ class RedisJson implements RedisJsonInterface
     }
 
     /**
-     * @param mixed $result
      * @return mixed
      * @throws \JsonException
      */
-    public static function getNumResult($result)
+    public static function getNumResult(mixed $result)
     {
         $result = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
         if (is_countable($result) && count($result) === 1) {

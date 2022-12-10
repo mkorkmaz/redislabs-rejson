@@ -17,10 +17,10 @@ final class ObjectKeys extends CommandAbstract implements CommandInterface
         $this->arguments = [$key,  $path->getPath()];
         $this->responseCallback = static function ($result) use ($path) {
             if (!empty($result)) {
-                if ($path->isLegacyPath() === false && count($result) === 1) {
+                if ($path->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) === 1) {
                     return $result[0][0];
                 }
-                if ($path->isLegacyPath() === false && count($result) > 1) {
+                if ($path->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) > 1) {
                     return $result;
                 }
                 return $result;

@@ -56,10 +56,10 @@ final class Debug extends CommandAbstract implements CommandInterface
         $pathObject = new Path($path);
         $debugObj->responseCallback = static function ($result) use ($pathObject) {
             if (!empty($result)) {
-                if ($pathObject->isLegacyPath() === false && count($result) === 1) {
+                if ($pathObject->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) === 1) {
                     return $result[0];
                 }
-                if ($pathObject->isLegacyPath() === false && count($result) > 1) {
+                if ($pathObject->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) > 1) {
                     return $result;
                 }
                 return $result;

@@ -6,8 +6,8 @@ namespace Redislabs\Module\RedisJson;
 
 final class Path
 {
-    private $path;
-    private $isLegacyPath;
+    private ?string $path = null;
+    private bool $isLegacyPath;
 
     public function __construct(?string $path = '.')
     {

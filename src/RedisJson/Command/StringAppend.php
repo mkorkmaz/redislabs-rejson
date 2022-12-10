@@ -21,10 +21,10 @@ final class StringAppend extends CommandAbstract implements CommandInterface
         $this->arguments = [$key, $path->getPath(), $json];
         $this->responseCallback = static function ($result) use ($path) {
             if (!empty($result)) {
-                if ($path->isLegacyPath() === false && count($result) === 1) {
+                if ($path->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) === 1) {
                     return $result[0];
                 }
-                if ($path->isLegacyPath() === false && count($result) > 1) {
+                if ($path->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) > 1) {
                     return $result;
                 }
                 return $result;
@@ -38,7 +38,7 @@ final class StringAppend extends CommandAbstract implements CommandInterface
         return new self(
             $key,
             new Path($path),
-            json_encode($json)
+            json_encode($json, JSON_THROW_ON_ERROR)
         );
     }
 }

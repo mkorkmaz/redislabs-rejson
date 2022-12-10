@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace RedislabsModulesTest\Module;
 
-use Predis;
+use Redis;
 use Redislabs\Module\ReJSON\ReJSON;
 use Redislabs\Module\RedisJson\RedisJson;
 use RedislabsModulesTest\UnitTester;
 
-class RedisJsonJsonPathSyntaxTest extends \Codeception\Test\Unit
+class PhpRedisTest extends \Codeception\Test\Unit
 {
     /**
      * @var UnitTester
@@ -20,12 +20,16 @@ class RedisJsonJsonPathSyntaxTest extends \Codeception\Test\Unit
      * @var ReJSON
      */
     protected $reJsonModule;
-    private ?\Predis\Client $redisClient = null;
+    /**
+     * @var Predis\Client
+     */
+    private $redisClient;
     // phpcs:disable
     protected function _before()
     {
-        $this->redisClient = new Predis\Client();
-        $this->reJsonModule = ReJSON::createWithPredis($this->redisClient);
+        $this->redisClient = new Redis();
+        $this->redisClient->connect('127.0.0.1', 6379);
+        $this->reJsonModule = ReJSON::createWithPhpRedis($this->redisClient);
     }
 
     protected function _after()

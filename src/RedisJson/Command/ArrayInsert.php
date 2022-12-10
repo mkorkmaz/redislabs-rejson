@@ -20,9 +20,7 @@ final class ArrayInsert extends CommandAbstract implements CommandInterface
         array $jsons
     ) {
         $this->arguments = array_merge([$key, $path->getPath(), $index], $jsons);
-        $this->responseCallback = static function ($result) use ($path) {
-            return RedisJson::getArrayResult($result, [$path]);
-        };
+        $this->responseCallback = static fn($result) => RedisJson::getArrayResult($result, [$path]);
     }
 
     public static function createCommandWithArguments(

@@ -3,9 +3,8 @@ sudo: false
 services:
   - docker
 php:
-  - 7.3
-  - 7.4
   - 8.0
+  - 8.1
   - nightly
 before_install:
   - pecl install -f redis <<< ''
@@ -19,7 +18,7 @@ script:
   - composer run phpcs
   - composer run phpstan
 after_script:
-  - if [ $TRAVIS_PHP_VERSION = '7.4' ]; then php vendor/bin/php-coveralls; fi
+  - if [ $TRAVIS_PHP_VERSION = '8.1' ]; then php vendor/bin/php-coveralls; fi
 after_success:
   - travis_retry php vendor/bin/php-coveralls -v
   - vendor/bin/test-reporter

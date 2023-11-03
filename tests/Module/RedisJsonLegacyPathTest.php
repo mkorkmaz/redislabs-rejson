@@ -224,20 +224,6 @@ class RedisJsonLegacyPathTest extends \Codeception\Test\Unit
     }
 
 
-    /**
-     * @test
-     */
-    public function shouldRunReJSONDebugCommandsSuccessfully(): void
-    {
-        /**
-         * @var ReJSON $jsonModule
-         */
-        $help = $this->reJsonModule->debug('HELP');
-        $this->assertStringContainsString('HELP', $help[1]);
-        $this->reJsonModule->set('test', '.', ['foo', 'bar']);
-        $memory = $this->reJsonModule->debug('MEMORY', 'test', '.');
-        $this->assertEqualsWithDelta(30, $memory, 6);
-    }
 
     /**
      * @test

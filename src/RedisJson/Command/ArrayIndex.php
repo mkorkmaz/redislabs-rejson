@@ -11,16 +11,23 @@ use Redislabs\Module\RedisJson\RedisJson;
 
 final class ArrayIndex extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.ARRINDEX';
+    #[\Override]
+    protected static string $command = 'JSON.ARRINDEX';
 
     private function __construct(
         string $key,
         Path $path,
         string $json,
-        int $start,
-        int $stop
+        ?int $start,
+        ?int $stop
     ) {
-        $this->arguments = [$key, $path->getPath(), $json, $start, $stop];
+        $this->arguments = [$key, $path->getPath(), $json];
+        if ($start !== null || $stop !== null) {
+            $this->arguments[] = $start ?? 0;
+        }
+        if ($stop !== null) {
+            $this->arguments[] = $stop;
+        }
         $this->responseCallback = static fn($result) => RedisJson::getArrayResult($result, [$path]);
     }
 
@@ -28,8 +35,8 @@ final class ArrayIndex extends CommandAbstract implements CommandInterface
         string $key,
         string $path,
         $json,
-        int $start,
-        int $stop
+        ?int $start,
+        ?int $stop
     ): CommandInterface {
         return new self(
             $key,

@@ -13,8 +13,9 @@ use function in_array;
 
 final class Set extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.SET';
-    private static $validExistentialModifiers = ['NX', 'XX'];
+    #[\Override]
+    protected static string $command = 'JSON.SET';
+    private const array VALID_EXISTENTIAL_MODIFIERS = ['NX', 'XX'];
 
     private function __construct(
         string $key,
@@ -26,7 +27,7 @@ final class Set extends CommandAbstract implements CommandInterface
 
     public function withExistentialModifier(string $existentialModifier): CommandInterface
     {
-        if (!in_array($existentialModifier, self::$validExistentialModifiers, true)) {
+        if (!in_array($existentialModifier, self::VALID_EXISTENTIAL_MODIFIERS, true)) {
             throw new InvalidExistentialModifierException(
                 sprintf('Invalid existential modifier (%s) used for the command JSON.SET', $existentialModifier)
             );
@@ -42,9 +43,6 @@ final class Set extends CommandAbstract implements CommandInterface
         ?string $existentialModifier = null
     ): CommandInterface {
         $jsonString = json_encode($json, JSON_THROW_ON_ERROR);
-        if ($jsonString === '[]') {
-            $jsonString = '{}';
-        }
         $command = new self(
             $key,
             new Path($path),

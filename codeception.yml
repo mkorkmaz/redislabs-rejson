@@ -1,3 +1,4 @@
+bootstrap: _bootstrap.php
 namespace: RedislabsModulesTest
 suites:
     unit:

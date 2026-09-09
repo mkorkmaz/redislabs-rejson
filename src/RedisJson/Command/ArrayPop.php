@@ -11,7 +11,8 @@ use Redislabs\Module\RedisJson\RedisJson;
 
 final class ArrayPop extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.ARRPOP';
+    #[\Override]
+    protected static string $command = 'JSON.ARRPOP';
 
     private function __construct(
         string $key,

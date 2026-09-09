@@ -4,19 +4,10 @@ declare(strict_types=1);
 
 namespace Redislabs\Module\RedisJson;
 
-final class Path
+final readonly class Path
 {
-    private ?string $path = null;
-    private bool $isLegacyPath;
-
-    public function __construct(?string $path = '.')
+    public function __construct(private ?string $path = '.')
     {
-        $isLegacyPath = true;
-        if ($path[0] === '$') {
-            $isLegacyPath = false;
-        }
-        $this->isLegacyPath = $isLegacyPath;
-        $this->path = $path;
     }
 
     public function getPath(): string
@@ -26,6 +17,6 @@ final class Path
 
     public function isLegacyPath(): bool
     {
-        return $this->isLegacyPath;
+        return !str_starts_with($this->path ?? '', '$');
     }
 }

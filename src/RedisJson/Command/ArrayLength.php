@@ -11,7 +11,8 @@ use Redislabs\Module\RedisJson\RedisJson;
 
 final class ArrayLength extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.ARRLEN';
+    #[\Override]
+    protected static string $command = 'JSON.ARRLEN';
 
     private function __construct(
         string $key,

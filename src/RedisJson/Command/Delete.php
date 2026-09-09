@@ -10,7 +10,8 @@ use Redislabs\Module\RedisJson\Path;
 
 final class Delete extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.DEL';
+    #[\Override]
+    protected static string $command = 'JSON.DEL';
 
     private function __construct(string $key, Path $path)
     {

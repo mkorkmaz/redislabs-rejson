@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.5']
+    services:
+      redis:
+        image: redis/redis-stack-server:7.4.0-v8
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      XDEBUG_MODE: coverage
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: '6379'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: redis, mbstring, dom, xml, xmlwriter
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Validate Composer configuration
+        run: composer validate --no-check-lock
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run tests with coverage
+        run: vendor/bin/codecept run unit --coverage --coverage-xml
+
+      - name: Check coding standard
+        run: composer run phpcs
+
+      - name: Run static analysis
+        run: composer run phpstan
+
+      - name: Store coverage report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-php-${{ matrix.php }}
+          path: tests/_output/coverage.xml
+          if-no-files-found: warn
+
+      - name: Publish coverage to Coveralls
+        if: ${{ success() && matrix.php == '8.5' }}
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file: tests/_output/coverage.xml
+          format: clover

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Redislabs\Module\RedisJson;
 
-use Redislabs\Interfaces\RedisClientInterface;
 use Redislabs\Module\ModuleTrait;
 use Redislabs\Module\RedisJson\Command\Delete;
+use Redislabs\Module\RedisJson\Command\Clear;
+use Redislabs\Module\RedisJson\Command\Merge;
+use Redislabs\Module\RedisJson\Command\MultipleSet;
+use Redislabs\Module\RedisJson\Command\Toggle;
 use Redislabs\Module\RedisJson\Command\Get;
 use Redislabs\Module\RedisJson\Command\Set;
 use Redislabs\Module\RedisJson\Command\MultipleGet;
@@ -25,42 +28,15 @@ use Redislabs\Module\RedisJson\Command\ObjectKeys;
 use Redislabs\Module\RedisJson\Command\ObjectLength;
 use Redislabs\Module\RedisJson\Command\Debug;
 use Redislabs\Module\RedisJson\Command\Resp;
-use Redislabs\Module\RedisJson\Exceptions\RedisJsonModuleNotFound;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class RedisJson implements RedisJsonInterface
 {
     use ModuleTrait;
 
-    private array $moduleVersion;
-
-    protected static $moduleName = 'ReJSON';
-
-    private function setModuleVersion(array $modules): void
-    {
-        $moduleData = array_values(
-            array_filter($modules, static fn($module) => $module[1] === self::$moduleName)
-        );
-        if (count($moduleData) === 0) {
-            throw new RedisJsonModuleNotFound(
-                'You need to have Redis ReJSON module to use this library. Please check https://oss.redis.com/redisjson'
-            );
-        }
-        $redisModuleVersionMajor = floor($moduleData[0][3] / 10000);
-        $redisModuleVersionMinor = floor(($moduleData[0][3] - $redisModuleVersionMajor * 10000) / 100);
-        $redisModuleVersionPatch = $moduleData[0][3] - $redisModuleVersionMajor * 10000
-            - $redisModuleVersionMinor * 100;
-        $this->moduleVersion = [
-            'version' => $moduleData[0][3],
-            'major' => $redisModuleVersionMajor,
-            'minor' => $redisModuleVersionMinor,
-            'patch' => $redisModuleVersionPatch,
-            'semver' => implode('.', [
-                $redisModuleVersionMajor,
-                $redisModuleVersionMinor,
-                $redisModuleVersionPatch
-            ]),
-        ];
-    }
+    protected static string $moduleName = 'ReJSON';
 
     public function del(string $key, ?string $path = '.'): int
     {
@@ -74,15 +50,32 @@ class RedisJson implements RedisJsonInterface
         return $this->del($key, $path);
     }
 
-    public function set(string $key, string $path, $json, ?string $existentialModifier = null)
+    public function set(string $key, string $path, $json, ?string $existentialModifier = null): ?string
     {
         $setCommandResult = $this->runCommand(
             Set::createCommandWithArguments($key, $path, $json, $existentialModifier)
         );
-        if ($setCommandResult !== true && $setCommandResult !== 'OK') {
-            return "";
-        }
-        return 'OK';
+        return self::getStatusResult($setCommandResult);
+    }
+
+    public function clear(string $key, string $path = '.'): int
+    {
+        return $this->runCommand(Clear::createCommandWithArguments($key, $path));
+    }
+
+    public function merge(string $key, string $path, mixed $json): ?string
+    {
+        return $this->runCommand(Merge::createCommandWithArguments($key, $path, $json));
+    }
+
+    public function mset(mixed ...$arguments): ?string
+    {
+        return $this->runCommand(MultipleSet::createCommandWithArguments($arguments));
+    }
+
+    public function toggle(string $key, string $path = '.'): bool|array|null
+    {
+        return $this->runCommand(Toggle::createCommandWithArguments($key, $path));
     }
 
     public function get(...$arguments)
@@ -106,14 +99,15 @@ class RedisJson implements RedisJsonInterface
         );
     }
 
-    public function numincrby(string $key, string $path, int $incrementBy)
+    public function numincrby(string $key, string $path, int|float $incrementBy)
     {
         return $this->runCommand(
             NumberIncrementBy::createCommandWithArguments($key, $path, $incrementBy)
         );
     }
 
-    public function nummultby(string $key, string $path, int $multiplyBy)
+    /** @deprecated RedisJSON deprecated JSON.NUMMULTBY in version 2.0. */
+    public function nummultby(string $key, string $path, int|float $multiplyBy)
     {
         return $this->runCommand(
             NumberMultiplyBy::createCommandWithArguments($key, $path, $multiplyBy)
@@ -141,7 +135,7 @@ class RedisJson implements RedisJsonInterface
         );
     }
 
-    public function arrindex(string $key, string $path, $json, ?int $start = 0, ?int $stop = 0)
+    public function arrindex(string $key, string $path, $json, ?int $start = null, ?int $stop = null)
     {
         return $this->runCommand(
             ArrayIndex::createCommandWithArguments($key, $path, $json, $start, $stop)
@@ -211,14 +205,14 @@ class RedisJson implements RedisJsonInterface
      */
     public static function getResult(string $result, array $paths)
     {
-        $result = json_decode($result, (bool) JSON_OBJECT_AS_ARRAY, 512, JSON_THROW_ON_ERROR);
+        $result = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
         if (count($paths) === 1 && $paths[0]->isLegacyPath() === false) {
             return (is_countable($result) ? count($result) : 0) === 1 ? $result[0] : $result;
         }
-        if (count($paths) > 1) {
+        if (count($paths) > 1 && array_any($paths, static fn(Path $path) => !$path->isLegacyPath())) {
             $resultArray = [];
             foreach ($result as $itemKey => $itemValue) {
-                $resultArray[$itemKey] = (is_countable($itemValue) ? count($itemValue) : 0) === 1 ? $itemValue[0]
+                $resultArray[$itemKey] = is_array($itemValue) && count($itemValue) === 1 ? $itemValue[0]
                     : $itemValue;
             }
             return $resultArray;
@@ -231,16 +225,43 @@ class RedisJson implements RedisJsonInterface
      * @return mixed
      * @throws \JsonException
      */
-    public static function getArrayResult(mixed $result, array $paths)
+    public static function getArrayResult(mixed $result, array $paths): mixed
     {
-        if (!empty($result) && count($paths) === 1) {
-            if ($paths[0]->isLegacyPath() === false) {
-                return (is_string($result[0])) ? json_decode($result[0], true, 512, JSON_THROW_ON_ERROR) :  $result[0];
-            }
-            return (is_string($result)) ? json_decode($result, true, 512, JSON_THROW_ON_ERROR) :  $result;
+        if ($result === null || $result === false) {
+            return null;
         }
+        if (count($paths) !== 1) {
+            return null;
+        }
+        if ($paths[0]->isLegacyPath()) {
+            return is_string($result) ? json_decode($result, true, 512, JSON_THROW_ON_ERROR) : $result;
+        }
+        $values = array_map(
+            static fn($value) => is_string($value)
+                ? json_decode($value, true, 512, JSON_THROW_ON_ERROR)
+                : ($value === false ? null : $value),
+            $result
+        );
+        return count($values) === 1 ? $values[0] : $values;
+    }
 
-        return null;
+    public static function getPathResult(mixed $result, Path $path): mixed
+    {
+        if ($result === false) {
+            return null;
+        }
+        if (is_array($result)) {
+            $result = array_map(static fn($value) => $value === false ? null : $value, $result);
+        }
+        if (!$path->isLegacyPath() && is_array($result) && count($result) === 1) {
+            return $result[0];
+        }
+        return $result;
+    }
+
+    public static function getStatusResult(mixed $result): ?string
+    {
+        return $result === true || $result === 'OK' ? 'OK' : null;
     }
 
     /**
@@ -249,7 +270,10 @@ class RedisJson implements RedisJsonInterface
      */
     public static function getNumResult(mixed $result)
     {
-        $result = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+        $result = is_string($result) ? json_decode($result, true, 512, JSON_THROW_ON_ERROR) : $result;
+        if ($result === false) {
+            return null;
+        }
         if (is_countable($result) && count($result) === 1) {
             return $result[0];
         }

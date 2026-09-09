@@ -1,3 +1,10 @@
 vendor/
 composer.lock
 tests/_support/_generated/
+
+composer.local.json
+composer.local.lock
+
+.env
+.env.*
+!.env.example

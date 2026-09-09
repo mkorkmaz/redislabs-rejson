@@ -11,7 +11,8 @@ use Redislabs\Module\RedisJson\RedisJson;
 
 final class StringAppend extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.STRAPPEND';
+    #[\Override]
+    protected static string $command = 'JSON.STRAPPEND';
 
     private function __construct(
         string $key,
@@ -19,18 +20,7 @@ final class StringAppend extends CommandAbstract implements CommandInterface
         string $json
     ) {
         $this->arguments = [$key, $path->getPath(), $json];
-        $this->responseCallback = static function ($result) use ($path) {
-            if (!empty($result)) {
-                if ($path->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) === 1) {
-                    return $result[0];
-                }
-                if ($path->isLegacyPath() === false && (is_countable($result) ? count($result) : 0) > 1) {
-                    return $result;
-                }
-                return $result;
-            }
-            return null;
-        };
+        $this->responseCallback = static fn($result) => RedisJson::getPathResult($result, $path);
     }
 
     public static function createCommandWithArguments(string $key, string $path, $json): CommandInterface

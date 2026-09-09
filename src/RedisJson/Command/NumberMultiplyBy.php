@@ -11,19 +11,25 @@ use Redislabs\Module\RedisJson\RedisJson;
 
 final class NumberMultiplyBy extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.NUMMULTBY';
+    #[\Override]
+    protected static string $command = 'JSON.NUMMULTBY';
+
+    #[\Override]
+    protected ?\Closure $responseCallback = RedisJson::getNumResult(...);
 
     private function __construct(
         string $key,
         Path $path,
-        int $incrementBy
+        int|float $incrementBy
     ) {
-        $this->arguments = [$key, $path->getPath(), $incrementBy];
-        $this->responseCallback = fn($result) => RedisJson::getNumResult($result);
+        $this->arguments = [$key, $path->getPath(), json_encode($incrementBy, JSON_THROW_ON_ERROR)];
     }
 
-    public static function createCommandWithArguments(string $key, string $path, int $incrementBy): CommandInterface
-    {
+    public static function createCommandWithArguments(
+        string $key,
+        string $path,
+        int|float $incrementBy
+    ): CommandInterface {
 
         return new self(
             $key,

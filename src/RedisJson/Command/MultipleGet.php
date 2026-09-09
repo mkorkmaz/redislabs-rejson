@@ -11,14 +11,18 @@ use Redislabs\Module\RedisJson\Path;
 
 final class MultipleGet extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.MGET';
+    #[\Override]
+    protected static string $command = 'JSON.MGET';
 
     private function __construct(array $keys, Path $path)
     {
         $this->arguments = $keys;
         $this->arguments[] = $path->getPath();
         $this->responseCallback = static function ($result) use ($keys) {
-            $resultArray = array_map([CommandAbstract::class, 'jsonDecode'], $result);
+            $resultArray = array_map(
+                static fn($value) => CommandAbstract::jsonDecode($value === false ? null : $value),
+                $result
+            );
             $resultToReturn = [];
             $keysCount = count($keys);
             for ($i = 0; $i < $keysCount; $i++) {
@@ -32,7 +36,7 @@ final class MultipleGet extends CommandAbstract implements CommandInterface
     {
         if (count($arguments) < 2) {
             throw new InvalidNumberOfArgumentsException(
-                sprintf('ReJson::mget needs at least 2 arguments!, % given', count($arguments))
+                sprintf('ReJson::mget needs at least 2 arguments!, %d given', count($arguments))
             );
         }
         $path = array_pop($arguments);

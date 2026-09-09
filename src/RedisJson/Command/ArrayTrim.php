@@ -11,7 +11,8 @@ use Redislabs\Module\RedisJson\RedisJson;
 
 final class ArrayTrim extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.ARRTRIM';
+    #[\Override]
+    protected static string $command = 'JSON.ARRTRIM';
 
     private function __construct(
         string $key,
@@ -20,12 +21,7 @@ final class ArrayTrim extends CommandAbstract implements CommandInterface
         int $stop
     ) {
         $this->arguments = [$key, $path->getPath(), $start, $stop];
-        $this->responseCallback = static function ($result) use ($path) {
-            if (!empty($result)) {
-                return RedisJson::getArrayResult($result, [$path]);
-            }
-            return null;
-        };
+        $this->responseCallback = static fn($result) => RedisJson::getArrayResult($result, [$path]);
     }
 
     public static function createCommandWithArguments(

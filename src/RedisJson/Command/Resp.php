@@ -10,7 +10,8 @@ use Redislabs\Module\RedisJson\Path;
 
 final class Resp extends CommandAbstract implements CommandInterface
 {
-    protected static $command = 'JSON.RESP';
+    #[\Override]
+    protected static string $command = 'JSON.RESP';
 
     private function __construct(
         string $key,
